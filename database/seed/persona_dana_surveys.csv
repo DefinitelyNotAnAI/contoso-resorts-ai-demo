@@ -1,0 +1,13 @@
+SurveyID,GuestID,BookingID,PropertyID,OverallRating,NPS,Cleanliness,Service,FoodBeverage,Spa,Activities,FreeText,SubmittedDate
+SV-0001001,G-0001001,BK-0001001,P-001,10,10,5,5,5,5,,"The spa is extraordinary. The alpine massage left me completely restored. Already planning my return.",2022-01-22
+SV-0001002,G-0001001,BK-0001002,P-001,9,9,5,5,4,5,,"Pre-booked the Alpine Signature Spa Package — once again it did not disappoint. The best massage I have ever experienced. The therapist remembered my preferences from my last visit.",2022-07-15
+SV-0001003,G-0001001,BK-0001003,P-001,10,10,5,5,5,5,,"The holiday penthouse experience was magical. The spa on Christmas Eve is a tradition now. This resort defines luxury.",2022-12-30
+SV-0001004,G-0001001,BK-0001004,P-001,10,10,5,5,5,5,,"My fourth stay at Park City. It never disappoints. The spa team remembered my preferences — that is what real luxury feels like.",2023-01-27
+SV-0001005,G-0001001,BK-0001005,P-001,9,9,5,5,5,5,,"The Alpine Signature Spa Package is the reason I keep coming back. Simply world-class. The mountain setting makes it even more special.",2023-07-09
+SV-0001006,G-0001001,BK-0001006,P-001,10,10,5,5,5,5,,"Sixth stay and this place gets better every time. The signature spa package is unrivaled anywhere I have traveled. My absolute favourite resort.",2023-12-30
+SV-0001007,G-0001001,BK-0001007,P-001,9,9,5,5,4,5,,"Wonderful ski weekend punctuated by the most restorative spa day. The staff always know exactly what I need without being asked.",2024-02-23
+SV-0001008,G-0001001,BK-0001008,P-001,10,10,5,5,5,5,,"Eight stays and Park City is still my favourite place in the world. The spa team is simply the best. I will be back every year for as long as they will have me.",2025-01-17
+SV-0001009,G-0001001,BK-0001009,P-002,4,3,3,3,4,,,"Disappointed. The room was very outdated — peeling wallpaper and old fixtures throughout. Staff were pleasant but the property needs serious renovation. Expected much more from a Contoso resort.",2023-04-17
+SV-0001010,G-0001001,BK-0001010,P-002,4,3,2,3,4,,,"Returned hoping the renovation had helped. The room is still outdated and tired. I will not be staying at Myrtle Beach again. This does not feel like a Contoso property.",2024-09-12
+SV-0001011,G-0001001,BK-0001011,P-004,8,8,5,5,4,,,"The rooftop bar is stunning. Loved the boutique atmosphere — very different from Park City but equally delightful. Great concierge recommendations.",2024-05-20
+SV-0001012,G-0001001,BK-0001012,P-004,8,8,4,5,4,,,"Always a treat. The concierge arranged wonderful theater tickets. The rooftop remains the city's best-kept secret. Will return for my next New York trip.",2025-06-26

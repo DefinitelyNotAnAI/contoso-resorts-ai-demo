@@ -1,0 +1,2 @@
+GuestID,FirstName,LastName,Email,Phone,HomeCity,Country,LoyaltyTier,LoyaltyPoints,MemberSince,Preferences
+G-0002001,Anne,Thropic,anne.thropic@outlook.com,(312) 555-0204,"Chicago, IL",US,Gold,34200,2021-08-15,"{""pillow_type"": ""soft"", ""room_temp"": ""warm"", ""dietary"": ""none"", ""floor_pref"": ""no preference"", ""extra_towels"": true}"

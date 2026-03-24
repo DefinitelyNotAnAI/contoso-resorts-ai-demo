@@ -1,0 +1,4 @@
+BookingID,GuestID,PropertyID,CheckIn,CheckOut,RoomType,RoomNumber,RatePerNight,TotalAmount,Status,SpecialRequests,BookedDate
+BK-0002001,G-0002001,P-003,2023-07-08,2023-07-13,Family Suite,312,549.00,2745.00,Completed,"Crib needed for infant; extra blanket requested",2023-05-30
+BK-0002002,G-0002001,P-003,2024-12-21,2024-12-27,Family Suite,318,589.00,3534.00,Completed,"Extra towels; late checkout requested (2pm)",2024-10-15
+BK-0002003,G-0002001,P-003,2026-03-07,2026-03-12,Family Suite,315,569.00,2845.00,Upcoming,,2026-01-22

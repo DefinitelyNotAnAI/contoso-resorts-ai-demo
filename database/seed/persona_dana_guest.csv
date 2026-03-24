@@ -1,0 +1,2 @@
+GuestID,FirstName,LastName,Email,Phone,HomeCity,Country,LoyaltyTier,LoyaltyPoints,MemberSince,Preferences
+G-0001001,Dana,Lakehouse,dana.lakehouse@gmail.com,(415) 555-0101,"San Francisco, CA",US,Platinum,187500,2020-03-15,"{""pillow_type"": ""down"", ""room_temp"": ""cool"", ""dietary"": ""none"", ""floor_pref"": ""high"", ""extra_towels"": true}"

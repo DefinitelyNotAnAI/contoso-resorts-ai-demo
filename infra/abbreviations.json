@@ -1,0 +1,9 @@
+{
+  "resourceGroup": "rg-",
+  "fabricCapacity": "fc",
+  "automationAccount": "aa-",
+  "openai": "oai-",
+  "contentSafety": "cs-",
+  "appService": "app-",
+  "appServicePlan": "plan-"
+}

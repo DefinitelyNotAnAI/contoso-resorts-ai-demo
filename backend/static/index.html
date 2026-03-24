@@ -1,0 +1,2975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contoso Resorts — Guest Intelligence PMS</title>
+<style>
+/* ===================================================================
+   CSS — Contoso Resorts PMS (Opera-inspired)
+   =================================================================== */
+
+/* --- Reset & Base -------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
+    color: #1a1a2e;
+    background: #f4f6f8;
+}
+button { cursor: pointer; font-family: inherit; }
+input { font-family: inherit; }
+
+/* --- CSS Variables ------------------------------------------------- */
+:root {
+    --navy: #003366;
+    --navy-light: #004080;
+    --sidebar-bg: #0a2540;
+    --sidebar-hover: #0d3158;
+    --accent-blue: #0067B8;
+    --accent-gold: #F5A623;
+    --surface: #f4f6f8;
+    --card: #ffffff;
+    --text-primary: #1a1a2e;
+    --text-secondary: #6b7280;
+    --text-muted: #9ca3af;
+    --border: #e5e7eb;
+    --healthy: #10b981;
+    --error: #ef4444;
+    --info: #3b82f6;
+    --radius: 6px;
+    --shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+    --shadow-lg: 0 4px 12px rgba(0,0,0,.15);
+}
+
+/* ===================================================================
+   DEMO LAUNCHER (Microsoft-branded, outside the PMS simulation)
+   =================================================================== */
+#launcher {
+    position: fixed; inset: 0; z-index: 1000;
+    background: #1b1b1b;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: opacity .5s ease, visibility .5s ease;
+}
+#launcher.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.launcher-badge {
+    font-size: 12px; color: #a0a0a0; letter-spacing: .5px; text-transform: uppercase;
+    margin-bottom: 12px;
+}
+.launcher-logo { width: 180px; margin-bottom: 8px; }
+.launcher-title {
+    font-size: 28px; font-weight: 600; color: #ffffff; margin-bottom: 4px;
+}
+.launcher-subtitle {
+    font-size: 15px; color: #a0a0a0; margin-bottom: 48px;
+}
+.launcher-cards {
+    display: flex; gap: 28px; flex-wrap: wrap; justify-content: center;
+}
+.persona-card {
+    width: 270px; background: #2d2d2d; border: 1px solid #3a3a3a;
+    border-radius: 12px; padding: 32px 24px 24px; text-align: center;
+    transition: transform .2s, border-color .3s, box-shadow .3s;
+}
+.persona-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-blue);
+    box-shadow: 0 8px 24px rgba(0,103,184,.25);
+}
+.persona-avatar {
+    width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 700; color: #fff;
+    background: linear-gradient(135deg, var(--avatar-c1), var(--avatar-c2));
+    overflow: hidden;
+}
+.persona-avatar img {
+    width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+}
+.persona-name { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+.persona-tier { font-size: 12px; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; margin-bottom: 12px; }
+.tier-platinum { color: #c0c0c0; }
+.tier-gold     { color: #f5a623; }
+.tier-silver   { color: #9ca3af; }
+.persona-scenario { font-size: 14px; font-weight: 500; color: #d0d0d0; margin-bottom: 4px; }
+.persona-desc { font-size: 12px; color: #888; line-height: 1.5; margin-bottom: 20px; min-height: 36px; }
+.persona-btn {
+    width: 100%; padding: 10px; border: none; border-radius: var(--radius);
+    background: var(--accent-blue); color: #fff; font-size: 13px; font-weight: 600;
+    transition: background .2s;
+}
+.persona-btn:hover { background: #005a9e; }
+.launcher-browse-row {
+    display: flex; justify-content: center; margin-top: 32px;
+}
+.browse-btn {
+    width: 270px; padding: 32px 24px; border: 1px solid #3a3a3a;
+    border-radius: 12px; background: #2d2d2d; color: #fff;
+    font-size: 16px; font-weight: 700; text-align: center;
+    transition: transform .2s, border-color .3s, box-shadow .3s; cursor: pointer;
+}
+.browse-btn:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-blue);
+    box-shadow: 0 8px 24px rgba(0,103,184,.25);
+}
+
+/* ===================================================================
+   PMS SHELL
+   =================================================================== */
+#pms {
+    display: none; height: 100vh;
+    grid-template-rows: 100px 1fr 28px;
+    grid-template-columns: 110px 1fr;
+    grid-template-areas:
+        "header header"
+        "sidebar main"
+        "status status";
+}
+#pms.active { display: grid; }
+
+/* --- Header -------------------------------------------------------- */
+.pms-header {
+    grid-area: header;
+    background: linear-gradient(90deg, var(--navy), var(--navy-light));
+    display: flex; align-items: stretch; padding: 0; gap: 0;
+    color: #fff; z-index: 10;
+}
+.header-logo-area {
+    width: 110px; background: #fff; display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0;
+}
+.header-logo { height: 100px; }
+.header-body {
+    flex: 1; display: flex; flex-direction: column; justify-content: center;
+    padding: 0 20px; gap: 0; min-width: 0;
+}
+.header-top {
+    display: flex; align-items: center; gap: 12px;
+}
+.header-title { font-size: 17px; font-weight: 700; flex: 1; }
+.header-divider { width: 1px; height: 24px; background: rgba(255,255,255,.2); }
+.header-scenario {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: rgba(255,255,255,.65);
+    margin-top: 6px; min-height: 20px;
+}
+.header-scenario .scenario-icon {
+    font-size: 14px;
+}
+.header-scenario .scenario-name {
+    font-weight: 600; color: rgba(255,255,255,.9);
+}
+.header-scenario .scenario-desc {
+    color: rgba(255,255,255,.55);
+}
+.header-scenario.empty { visibility: hidden; }
+.header-property {
+    font-size: 12px; color: rgba(255,255,255,.7); display: flex; align-items: center; gap: 4px;
+}
+.header-user {
+    font-size: 12px; color: rgba(255,255,255,.7); display: flex; align-items: center; gap: 6px;
+}
+.header-user-icon {
+    width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,.15);
+    display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff;
+}
+.db-indicator {
+    display: flex; align-items: center; gap: 6px; font-size: 11px;
+    color: rgba(255,255,255,.7); margin-left: 8px;
+}
+.db-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted);
+    transition: background .3s;
+}
+.db-dot.healthy { background: var(--healthy); box-shadow: 0 0 6px rgba(16,185,129,.5); }
+.db-dot.unhealthy { background: var(--error); box-shadow: 0 0 6px rgba(239,68,68,.5); }
+
+/* --- Sidebar ------------------------------------------------------- */
+.pms-sidebar {
+    grid-area: sidebar;
+    background: var(--sidebar-bg);
+    display: flex; flex-direction: column; align-items: center;
+    padding: 8px 0; gap: 2px; overflow: hidden;
+}
+.sidebar-item {
+    width: 64px; height: 52px; border-radius: var(--radius);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: rgba(255,255,255,.5); font-size: 18px; cursor: pointer;
+    transition: background .2s, color .2s; border: none; background: transparent;
+    position: relative;
+}
+.sidebar-item:hover { background: var(--sidebar-hover); color: rgba(255,255,255,.8); }
+.sidebar-item.active { color: var(--accent-gold); background: var(--sidebar-hover); }
+.sidebar-label {
+    font-size: 9px; margin-top: 2px; letter-spacing: .3px; text-transform: uppercase;
+    white-space: nowrap;
+}
+.sidebar-spacer { flex: 1; }
+
+/* --- Main Content -------------------------------------------------- */
+.pms-main {
+    grid-area: main;
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 0;
+    overflow: hidden;
+}
+
+/* -- Left Panel (Guest + Data) -------------------------------------- */
+.left-panel {
+    display: flex; flex-direction: column;
+    overflow: hidden; background: var(--surface);
+}
+
+/* Search bar */
+.search-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 16px; background: var(--card);
+    border-bottom: 1px solid var(--border);
+}
+.search-input {
+    flex: 1; padding: 8px 12px; border: 1px solid var(--border);
+    border-radius: var(--radius); font-size: 13px; background: var(--surface);
+    transition: border-color .2s;
+}
+.search-input:focus { outline: none; border-color: var(--accent-blue); }
+.search-btn {
+    padding: 8px 16px; border: none; border-radius: var(--radius);
+    background: var(--accent-blue); color: #fff; font-size: 13px; font-weight: 500;
+    display: flex; align-items: center; gap: 6px; transition: background .2s;
+}
+.search-btn:hover { background: #005a9e; }
+.new-search-btn {
+    padding: 8px 14px; border: none; border-radius: var(--radius);
+    background: transparent; color: var(--text-secondary); font-size: 12px; font-weight: 500;
+    display: none; align-items: center; gap: 5px; border: 1px solid var(--border);
+    transition: background .2s, color .2s, border-color .2s; white-space: nowrap;
+}
+.new-search-btn.visible { display: flex; }
+.new-search-btn:hover { background: #fef2f2; color: #dc2626; border-color: #fca5a5; }
+
+/* Search results list */
+.search-results-panel {
+    margin: 0 16px; background: var(--card);
+    border: 1px solid var(--border); border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow: var(--shadow); overflow: hidden;
+}
+.search-results-panel.hidden { display: none; }
+.search-results-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.search-results-table th {
+    padding: 8px 12px; background: var(--surface); color: var(--text-secondary);
+    font-weight: 600; text-align: left; font-size: 11px; text-transform: uppercase;
+    letter-spacing: .4px; border-bottom: 1px solid var(--border);
+}
+.search-results-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+.search-results-table tr:last-child td { border-bottom: none; }
+.search-results-table tbody tr { cursor: pointer; transition: background .15s; }
+.search-results-table tbody tr:hover { background: var(--surface); }
+
+/* Guest profile card */
+.guest-card {
+    display: none; margin: 12px 16px 0; padding: 16px 20px;
+    background: var(--card); border-radius: var(--radius);
+    border: 1px solid var(--border); box-shadow: var(--shadow);
+    position: relative;
+}
+.guest-card.visible { display: block; }
+.guest-card-close {
+    position: absolute; top: 10px; right: 12px;
+    background: none; border: none; font-size: 15px; line-height: 1;
+    color: var(--text-muted); cursor: pointer; padding: 4px 6px;
+    border-radius: var(--radius); transition: background .15s, color .15s;
+}
+.guest-card-close:hover { background: #fef2f2; color: #dc2626; }
+.guest-card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+.guest-card-avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; color: #fff;
+    background: linear-gradient(135deg, var(--navy), var(--accent-blue));
+}
+.guest-card-name { font-size: 17px; font-weight: 600; }
+.guest-card-id { font-size: 11px; color: var(--text-secondary); }
+.loyalty-badge {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+    margin-left: 8px;
+}
+.loyalty-badge.platinum { background: linear-gradient(135deg,#c0c0c0,#e8e8e8); color: #333; }
+.loyalty-badge.gold     { background: linear-gradient(135deg,#f5a623,#ffd700); color: #5a3e00; }
+.loyalty-badge.silver   { background: #e5e7eb; color: #555; }
+.loyalty-badge.member   { background: #dbeafe; color: #1e40af; }
+.guest-fields {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px;
+}
+.guest-field label {
+    display: block; font-size: 10px; font-weight: 600; text-transform: uppercase;
+    color: var(--text-muted); letter-spacing: .5px; margin-bottom: 1px;
+}
+.guest-field span { font-size: 13px; color: var(--text-primary); }
+
+/* Tab bar */
+.tab-bar {
+    display: flex; gap: 0; margin: 12px 16px 0; border-bottom: 2px solid var(--border);
+}
+.tab-btn {
+    padding: 8px 18px; border: none; background: transparent;
+    font-size: 12px; font-weight: 600; color: var(--text-secondary);
+    border-bottom: 2px solid transparent; margin-bottom: -2px;
+    transition: color .2s, border-color .2s; text-transform: uppercase;
+    letter-spacing: .5px;
+}
+.tab-btn:hover { color: var(--text-primary); }
+.tab-btn.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); }
+
+/* Tab content */
+.tab-content {
+    flex: 1; overflow: auto; padding: 12px 16px 16px;
+}
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* Data tables */
+.data-table {
+    width: 100%; border-collapse: collapse; font-size: 12px;
+}
+.data-table thead th {
+    padding: 8px 10px; text-align: left; font-weight: 600;
+    background: var(--surface); color: var(--text-secondary);
+    border-bottom: 2px solid var(--border); position: sticky; top: 0;
+    text-transform: uppercase; letter-spacing: .4px; font-size: 10px;
+}
+.data-table tbody td {
+    padding: 7px 10px; border-bottom: 1px solid var(--border);
+    vertical-align: top;
+}
+.data-table tbody tr:hover { background: #f0f4ff; }
+.status-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 10px;
+    font-size: 10px; font-weight: 600; text-transform: uppercase;
+}
+.status-completed { background: #d1fae5; color: #065f46; }
+.status-upcoming  { background: #dbeafe; color: #1e40af; }
+.status-cancelled { background: #fee2e2; color: #991b1b; }
+
+/* Availability grid */
+.avail-controls {
+    display: flex; gap: 8px; align-items: center; margin-bottom: 12px;
+}
+.avail-controls input {
+    padding: 6px 10px; border: 1px solid var(--border); border-radius: var(--radius);
+    font-size: 12px;
+}
+.avail-controls button {
+    padding: 6px 14px; border: none; border-radius: var(--radius);
+    background: var(--accent-blue); color: #fff; font-size: 12px; font-weight: 500;
+}
+.avail-sold-out { color: var(--error); font-weight: 600; }
+.avail-low { color: #d97706; font-weight: 600; }
+.avail-ok { color: var(--healthy); }
+
+/* Notes list */
+.note-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 10px 14px; margin-bottom: 8px;
+}
+.note-card-label {
+    font-size: 10px; font-weight: 600; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: .4px; margin-bottom: 4px;
+}
+.note-card-source { font-size: 10px; color: var(--accent-blue); float: right; }
+.note-card-text { font-size: 13px; line-height: 1.5; }
+
+/* Placeholder messages */
+.placeholder-msg {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 200px; color: var(--text-muted); font-size: 13px; text-align: center;
+    gap: 8px;
+}
+.placeholder-msg .icon { font-size: 32px; opacity: .4; }
+
+/* -- Right Panel (AI Intelligence) ---------------------------------- */
+.right-panel {
+    background: var(--card); border-left: 1px solid var(--border);
+    display: flex; flex-direction: column; overflow: hidden;
+}
+.ai-panel-header {
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+}
+.ai-panel-title {
+    font-size: 13px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .5px; color: var(--navy);
+    display: flex; align-items: center; gap: 8px;
+}
+.ai-panel-title .ai-icon {
+    width: 20px; height: 20px; border-radius: 4px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: #fff;
+}
+.ai-sources {
+    display: flex; gap: 8px; padding: 8px 16px; border-bottom: 1px solid var(--border);
+}
+.ai-source-badge {
+    font-size: 10px; padding: 3px 8px; border-radius: 10px;
+    font-weight: 600; letter-spacing: .3px;
+}
+.ai-source-pms      { background: #e0e7ff; color: #3730a3; }
+.ai-source-medallia  { background: #fef3c7; color: #92400e; opacity: .5; }
+.ai-source-fareharbor { background: #d1fae5; color: #065f46; opacity: .5; }
+.ai-source-hotsos    { background: #fff7ed; color: #c2410c; opacity: .5; }  /* HotSOS — Epic 4.1 */
+.ai-source-badge.connected { opacity: 1; }
+
+.ai-panel-body {
+    flex: 1; overflow-y: auto; padding: 16px;
+}
+.ai-section {
+    margin-bottom: 16px;
+}
+.ai-section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    color: var(--text-secondary); letter-spacing: .5px; margin-bottom: 8px;
+}
+.ai-section-body {
+    background: var(--surface); border-radius: var(--radius);
+    padding: 12px; font-size: 12px; color: var(--text-muted);
+    border: 1px dashed var(--border); min-height: 60px;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; line-height: 1.5;
+}
+.ai-section-body.populated {
+    border-style: solid; color: var(--text-primary); display: block; text-align: left;
+}
+.ai-analyze-btn {
+    width: 100%; padding: 10px; border: none; border-radius: var(--radius);
+    font-size: 13px; font-weight: 600; margin-top: 8px;
+    transition: background .2s;
+}
+.ai-analyze-btn.disabled {
+    background: var(--surface); color: var(--text-muted);
+    cursor: not-allowed; border: 1px dashed var(--border);
+}
+.ai-analyze-btn.enabled {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff; cursor: pointer;
+}
+.ai-analyze-btn.enabled:hover { filter: brightness(1.1); }
+
+/* -- Guest Intelligence (Epic 3.3) ---------------------------------- */
+/* Pipeline progress steps */
+.pipeline-steps {
+    display: flex; gap: 4px; padding: 8px 16px;
+    align-items: center; flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+}
+.pipeline-step {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 600; color: var(--text-muted);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 2px 8px;
+    text-transform: uppercase; letter-spacing: .3px;
+    transition: all .2s;
+}
+.pipeline-step.running {
+    border-color: #6366f1; color: #6366f1;
+    background: #eef2ff;
+    animation: pulse-step 1s ease-in-out infinite;
+}
+.pipeline-step.done { border-color: #10b981; color: #065f46; background: #d1fae5; }
+.pipeline-step.error { border-color: #f87171; color: #991b1b; background: #fee2e2; }
+.pipeline-step .step-ms {
+    font-size: 9px; opacity: .7;
+}
+@keyframes pulse-step {
+    0%,100% { opacity: 1; } 50% { opacity: .6; }
+}
+
+/* Timing badge in panel header */
+.timing-badge {
+    font-size: 10px; font-weight: 600; color: var(--text-muted);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 2px 8px; letter-spacing: .2px;
+}
+.timing-badge.active { color: #6366f1; border-color: #6366f1; background: #eef2ff; }
+
+/* Proactive flags (Epic 4.1 — HotSOS service request alerts) */
+.proactive-flags { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+.proactive-flag-card {
+    border-radius: 8px; padding: 10px 12px;
+    border-left: 4px solid currentColor;
+    font-size: 12px; line-height: 1.5;
+}
+.proactive-flag-card.critical { background: #fff1f2; border-color: #e11d48; color: #881337; }
+.proactive-flag-card.warning  { background: #fff7ed; border-color: #ea580c; color: #7c2d12; }
+.proactive-flag-card.info     { background: #eff6ff; border-color: #3b82f6; color: #1e3a8a; }
+.proactive-flag-label {
+    font-weight: 700; font-size: 10px; text-transform: uppercase;
+    letter-spacing: .4px; margin-bottom: 4px;
+    display: flex; align-items: center; gap: 5px;
+}
+.proactive-flag-detail { color: inherit; }
+.proactive-flag-meta   { font-size: 10px; margin-top: 4px; opacity: .7; }
+
+/* Intelligence briefing */
+.intel-briefing {
+    background: linear-gradient(135deg, #f0f4ff, #f5f3ff);
+    border: 1px solid #c7d2fe; border-radius: var(--radius);
+    padding: 12px; margin-bottom: 12px;
+    font-size: 12.5px; line-height: 1.6;
+    color: var(--text-primary);
+}
+.intel-briefing-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .4px; color: #6366f1; margin-bottom: 6px;
+}
+
+/* Insight cards */
+.insight-cards { display: flex; flex-direction: column; gap: 8px; }
+.insight-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 10px 12px;
+    border-left: 3px solid var(--border);
+}
+.insight-card.likes       { border-left-color: #10b981; }
+.insight-card.pain_points { border-left-color: #f59e0b; }
+.insight-card.request_patterns { border-left-color: #6366f1; }
+.insight-card.cross_property   { border-left-color: #06b6d4; }
+.insight-card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 4px;
+}
+.insight-type-badge {
+    font-size: 9px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .4px; border-radius: 3px; padding: 1px 5px;
+}
+.insight-type-badge.likes       { background: #d1fae5; color: #065f46; }
+.insight-type-badge.pain_points { background: #fef3c7; color: #92400e; }
+.insight-type-badge.request_patterns { background: #e0e7ff; color: #3730a3; }
+.insight-type-badge.cross_property   { background: #cffafe; color: #0e7490; }
+.insight-title {
+    font-size: 12px; font-weight: 600; color: var(--navy);
+}
+.insight-detail {
+    font-size: 11.5px; color: var(--text-secondary); line-height: 1.5; margin-top: 2px;
+}
+.insight-sources {
+    display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap;
+}
+.insight-source-chip {
+    font-size: 10px; background: #f1f5f9; color: var(--text-muted);
+    border-radius: 3px; padding: 1px 6px; border: 1px solid var(--border);
+}
+
+/* Recommendations button (secondary) */
+.rec-footer-btn {
+    width: 100%; padding: 9px; border: 1px solid #6366f1; border-radius: var(--radius);
+    font-size: 12px; font-weight: 600; margin-top: 8px; color: #6366f1;
+    background: #f5f3ff; cursor: pointer; transition: background .2s;
+}
+.rec-footer-btn:hover { background: #e0e7ff; }
+.rec-footer-btn:disabled {
+    border-color: var(--border); color: var(--text-muted);
+    background: var(--surface); cursor: not-allowed;
+}
+
+/* Pipeline fatal error + retry (Epic 3.3.8) */
+.pipeline-error-panel {
+    background: #fff1f2; border: 1px solid #fecdd3;
+    border-radius: var(--radius); padding: 14px 16px;
+    font-size: 12px; color: #9f1239; line-height: 1.5;
+}
+.pipeline-error-panel strong { display: block; margin-bottom: 4px; font-size: 12.5px; }
+.pipeline-retry-btn {
+    margin-top: 10px; padding: 6px 14px; border: none; border-radius: var(--radius);
+    background: #9f1239; color: #fff; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: background .15s;
+}
+.pipeline-retry-btn:hover { background: #be123c; }
+
+/* Non-fatal agent warning inline */
+.agent-warn {
+    display: flex; align-items: flex-start; gap: 6px;
+    background: #fffbeb; border: 1px solid #fde68a;
+    border-radius: var(--radius); padding: 8px 10px;
+    font-size: 11.5px; color: #92400e; line-height: 1.5; margin-bottom: 8px;
+}
+.agent-warn-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+/* Sentiment category grid (Epic 3.3.6) */
+.sent-cat-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 4px; margin-top: 8px;
+}
+.sent-cat-item {
+    display: flex; flex-direction: column; gap: 2px;
+}
+.sent-cat-label {
+    font-size: 10px; color: var(--text-muted); font-weight: 600;
+    text-transform: uppercase; letter-spacing: .3px;
+}
+.sent-cat-bar-wrap {
+    display: flex; align-items: center; gap: 4px;
+}
+.sent-cat-bar-bg {
+    flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden;
+}
+.sent-cat-bar-fill {
+    height: 100%; border-radius: 3px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    transition: width .4s;
+}
+.sent-cat-bar-fill.high { background: linear-gradient(90deg, #10b981, #34d399); }
+.sent-cat-bar-fill.mid  { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.sent-cat-bar-fill.low  { background: linear-gradient(90deg, #f87171, #fb923c); }
+.sent-cat-score { font-size: 10px; color: var(--text-secondary); font-weight: 600; min-width: 22px; }
+
+.sql-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 18px; font-size: 9px; font-weight: 700;
+    color: var(--accent-blue); background: #e0e7ff; border-radius: 3px;
+    cursor: pointer; font-family: 'Courier New', monospace;
+    transition: background .2s;
+}
+.sql-icon:hover { background: #c7d2fe; }
+
+/* SQL Popup */
+.sql-popup-overlay {
+    position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,.4);
+    display: none; align-items: center; justify-content: center;
+}
+.sql-popup-overlay.visible { display: flex; }
+.sql-popup {
+    background: var(--card); border-radius: 8px; box-shadow: var(--shadow-lg);
+    width: 600px; max-width: 90vw; max-height: 70vh; overflow: hidden;
+    display: flex; flex-direction: column;
+}
+.sql-popup-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+    font-size: 13px; font-weight: 600;
+}
+.sql-popup-close {
+    border: none; background: transparent; font-size: 18px; color: var(--text-secondary);
+    cursor: pointer;
+}
+.sql-popup-body {
+    padding: 16px; overflow-y: auto; flex: 1;
+}
+.sql-popup-question {
+    font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;
+}
+.sql-popup-code {
+    background: #1e1e2e; color: #cdd6f4; padding: 14px; border-radius: var(--radius);
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 12px; line-height: 1.6; white-space: pre-wrap; overflow-x: auto;
+}
+.sql-kw { color: #89b4fa; } /* SQL keywords */
+.sql-fn { color: #f9e2af; } /* functions */
+.sql-str { color: #a6e3a1; } /* strings */
+.sql-num { color: #fab387; } /* numbers */
+
+/* --- Status Bar ---------------------------------------------------- */
+.pms-status {
+    grid-area: status;
+    background: var(--navy); color: rgba(255,255,255,.7);
+    display: flex; align-items: center; padding: 0 16px; gap: 16px;
+    font-size: 11px;
+}
+.status-item { display: flex; align-items: center; gap: 4px; }
+.status-sep { width: 1px; height: 14px; background: rgba(255,255,255,.15); }
+.status-switch {
+    padding: 3px 10px; border: 1px solid rgba(255,255,255,.25); border-radius: 3px;
+    background: transparent; color: rgba(255,255,255,.7); font-size: 11px;
+    cursor: pointer; transition: background .2s, color .2s;
+}
+.status-switch:hover { background: rgba(255,255,255,.12); color: #fff; }
+
+/* --- Loading spinner ---------------------------------------------- */
+.spinner {
+    display: inline-block; width: 14px; height: 14px;
+    border: 2px solid rgba(0,0,0,.1); border-top-color: var(--accent-blue);
+    border-radius: 50%; animation: spin .6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-overlay {
+    display: none; position: absolute; inset: 0; z-index: 5;
+    background: rgba(255,255,255,.7); align-items: center; justify-content: center;
+}
+.loading-overlay.visible { display: flex; }
+
+/* --- Dashboard home screen ---------------------------------------- */
+.dashboard-view {
+    flex: 1; overflow-y: auto; padding: 24px;
+}
+.dashboard-view.hidden { display: none; }
+.guest-view { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+.guest-view.hidden { display: none; }
+.dash-welcome {
+    font-size: 20px; font-weight: 600; color: var(--navy); margin-bottom: 4px;
+}
+.dash-subtitle {
+    font-size: 13px; color: var(--text-secondary); margin-bottom: 24px;
+}
+.dash-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px; margin-bottom: 24px;
+}
+.dash-stat {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 14px 16px;
+    box-shadow: var(--shadow);
+}
+.dash-stat-label {
+    font-size: 10px; font-weight: 600; text-transform: uppercase;
+    color: var(--text-muted); letter-spacing: .5px; margin-bottom: 4px;
+}
+.dash-stat-value { font-size: 22px; font-weight: 700; color: var(--navy); }
+.dash-quick-actions { margin-top: 8px; }
+.dash-quick-actions h3 {
+    font-size: 12px; font-weight: 600; text-transform: uppercase;
+    color: var(--text-secondary); letter-spacing: .5px; margin-bottom: 10px;
+}
+.dash-action-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--card); color: var(--text-primary); font-size: 12px;
+    font-weight: 500; cursor: pointer; transition: border-color .2s, background .2s;
+    margin-right: 8px; margin-bottom: 8px;
+}
+.dash-action-btn:hover { border-color: var(--accent-blue); background: #f0f4ff; }
+
+/* --- Toast notifications ------------------------------------------ */
+.toast-container {
+    position: fixed; top: 108px; right: 16px; z-index: 200;
+    display: flex; flex-direction: column; gap: 8px;
+}
+.toast {
+    padding: 10px 16px; border-radius: var(--radius);
+    font-size: 12px; color: #fff; box-shadow: var(--shadow-lg);
+    animation: slideIn .3s ease;
+    max-width: 360px;
+}
+.toast.error   { background: var(--error); }
+.toast.success { background: var(--healthy); }
+.toast.info    { background: var(--info); }
+@keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes fadeIn  { from { opacity: 0; transform: translateY(6px); }  to { opacity: 1; transform: translateY(0); } }
+.fade-in { animation: fadeIn .3s ease; }
+.ai-section-body.populated { animation: fadeIn .35s ease; }
+/* Thin custom scrollbar for AI panel */
+.ai-panel-body::-webkit-scrollbar { width: 4px; }
+.ai-panel-body::-webkit-scrollbar-track { background: transparent; }
+.ai-panel-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.ai-panel-body::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ===================================================================
+   AI PANEL — Collapse / Expand + Result Cards
+   =================================================================== */
+.ai-section-header { cursor: pointer; user-select: none; }
+.ai-section-header:hover { color: var(--text-primary); }
+.ai-chevron {
+    display: inline-block; transition: transform .25s; font-style: normal;
+    font-size: 10px;
+}
+.ai-section.collapsed .ai-chevron { transform: rotate(-90deg); }
+.ai-section-body { overflow: hidden; transition: max-height .3s ease; max-height: 2000px; }
+.ai-section.collapsed .ai-section-body {
+    max-height: 0 !important; padding: 0 !important;
+    min-height: 0 !important; border: none !important;
+}
+
+/* Recommendation cards */
+.rec-card {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 12px 14px; margin-bottom: 10px;
+    box-shadow: var(--shadow);
+}
+.rec-card:last-child { margin-bottom: 0; }
+.rec-headline { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.rec-scenario-badge {
+    display: inline-block; font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 10px; margin-bottom: 8px;
+    background: #ede9fe; color: #5b21b6; text-transform: capitalize;
+}
+.rec-narrative {
+    font-size: 12px; color: var(--text-secondary); line-height: 1.55; margin-bottom: 8px;
+}
+.rec-experiences { display: flex; flex-wrap: wrap; gap: 6px; }
+.rec-exp-chip {
+    font-size: 11px; padding: 3px 8px; border-radius: 10px;
+    background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0;
+}
+
+/* Sentiment */
+.sent-property { margin-bottom: 12px; }
+.sent-property:last-child { margin-bottom: 0; }
+.sent-prop-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.sent-prop-name { font-size: 12px; font-weight: 700; color: var(--navy); }
+.sent-score-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+.sent-score-high { background: #d1fae5; color: #065f46; }
+.sent-score-mid  { background: #fef3c7; color: #92400e; }
+.sent-score-low  { background: #fee2e2; color: #991b1b; }
+.sent-themes { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; }
+.sent-theme-pos { font-size: 10px; padding: 2px 7px; border-radius: 8px; background: #d1fae5; color: #065f46; }
+.sent-theme-neg { font-size: 10px; padding: 2px 7px; border-radius: 8px; background: #fee2e2; color: #991b1b; }
+.sent-sep { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
+
+/* Validation */
+.val-safety-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; padding: 4px 12px;
+    border-radius: 20px; margin-bottom: 10px;
+}
+.val-safety-pass { background: #d1fae5; color: #065f46; }
+.val-safety-fail { background: #fee2e2; color: #991b1b; }
+.val-flag {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 12px;
+}
+.val-flag:last-child { border-bottom: none; }
+.val-flag-icon { flex-shrink: 0; font-size: 14px; }
+.val-flag-msg { color: var(--text-secondary); line-height: 1.4; }
+.val-flag.blocked .val-flag-msg { color: var(--error); font-weight: 500; }
+.val-flag.warning .val-flag-msg { color: #d97706; }
+.val-all-clear { font-size: 12px; color: var(--healthy); font-weight: 600; }
+
+/* ===================================================================
+   ACD INCOMING CALL NOTIFICATION CARD — top-centre, fixed
+   =================================================================== */
+.acd-card {
+    position: fixed; top: 108px; left: 50%; transform: translateX(-50%) translateY(-20px);
+    z-index: 900; width: 340px;
+    background: #1c2333; border: 1px solid rgba(255,255,255,.12);
+    border-radius: 10px; box-shadow: 0 8px 32px rgba(0,0,0,.45);
+    opacity: 0; transition: opacity .25s ease, transform .25s ease;
+    pointer-events: none;
+}
+.acd-card.visible {
+    opacity: 1; transform: translateX(-50%) translateY(0);
+    pointer-events: all;
+}
+.acd-card-inner { padding: 14px 16px; }
+
+/* Blinking phone ring icon row */
+.acd-card-heading {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+}
+.acd-ring-icon {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(16,185,129,.2); border: 1px solid rgba(16,185,129,.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; animation: acdRingShake 1.2s ease-in-out infinite;
+    flex-shrink: 0;
+}
+@keyframes acdRingShake {
+    0%,100% { transform: rotate(0deg); }
+    10%     { transform: rotate(-15deg); }
+    20%     { transform: rotate(15deg); }
+    30%     { transform: rotate(-10deg); }
+    40%     { transform: rotate(10deg); }
+    50%     { transform: rotate(0deg); }
+}
+.acd-heading-text { flex: 1; }
+.acd-heading-title {
+    font-size: 13px; font-weight: 700; color: #fff; line-height: 1.2;
+}
+.acd-heading-queue {
+    font-size: 11px; color: var(--healthy); font-weight: 600;
+    letter-spacing: .3px; text-transform: uppercase;
+}
+
+/* Timeout progress bar */
+.acd-timeout-bar {
+    height: 3px; background: rgba(255,255,255,.1); border-radius: 2px;
+    margin-bottom: 12px; overflow: hidden;
+}
+.acd-timeout-fill {
+    height: 100%; background: var(--accent-gold); border-radius: 2px;
+    width: 100%; transition: width 1s linear;
+}
+
+/* Info rows */
+.acd-info { margin-bottom: 12px; }
+.acd-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.06);
+    font-size: 12px;
+}
+.acd-row:last-child { border-bottom: none; }
+.acd-label { color: rgba(255,255,255,.45); font-weight: 500; }
+.acd-value { color: rgba(255,255,255,.9); font-weight: 600; font-family: 'Courier New', monospace; font-size: 11px; }
+.acd-value.mono { letter-spacing: .5px; }
+
+/* Buttons */
+.acd-buttons { display: flex; gap: 8px; }
+.acd-btn-answer, .acd-btn-decline {
+    flex: 1; padding: 9px; border: none; border-radius: 6px;
+    font-size: 12px; font-weight: 700; cursor: pointer; transition: background .15s, transform .1s;
+}
+.acd-btn-answer:active, .acd-btn-decline:active { transform: scale(.97); }
+.acd-btn-answer  { background: #10b981; color: #fff; }
+.acd-btn-answer:hover  { background: #059669; }
+.acd-btn-decline { background: rgba(239,68,68,.75); color: #fff; }
+.acd-btn-decline:hover { background: var(--error); }
+
+/* ===================================================================
+   ACTIVE CALL BAR — fixed top-centre (replaces header pill)
+   =================================================================== */
+.call-bar {
+    position: fixed; top: 8px; left: 50%; transform: translateX(-50%);
+    z-index: 800; display: none;
+    align-items: center; gap: 10px;
+    background: rgba(10,37,64,.92); border: 1px solid rgba(16,185,129,.45);
+    border-radius: 20px; padding: 5px 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.35);
+    backdrop-filter: blur(6px);
+}
+.call-bar.visible { display: flex; }
+.call-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--healthy);
+    animation: callPulse 1.5s ease-in-out infinite;
+}
+@keyframes callPulse {
+    0%,100% { opacity:1; transform:scale(1); }
+    50%      { opacity:.4; transform:scale(.7); }
+}
+.call-name  { font-size:11px; font-weight:700; color:#fff; }
+.call-timer {
+    font-size:12px; font-weight:600; color:rgba(255,255,255,.85);
+    font-family:'Courier New',monospace; min-width:38px;
+}
+.call-btn-mute, .call-btn-end {
+    border:none; border-radius:12px; padding:3px 10px;
+    font-size:11px; font-weight:600; cursor:pointer; transition:background .2s;
+}
+.call-btn-mute        { background:rgba(255,255,255,.15); color:#fff; }
+.call-btn-mute:hover  { background:rgba(255,255,255,.25); }
+.call-btn-mute.muted  { background:rgba(239,68,68,.35); color:#fca5a5; }
+.call-btn-end         { background:rgba(239,68,68,.7); color:#fff; }
+.call-btn-end:hover   { background:var(--error); }
+
+/* ===================================================================
+   CALL PANEL — top of right panel, visible during active calls
+   =================================================================== */
+.call-panel {
+    display: none; flex-direction: column;
+    border-bottom: 2px solid rgba(16,185,129,.3);
+    background: #0f1b2d; flex-shrink: 0;
+}
+.call-panel.active { display: flex; }
+
+.call-panel-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 12px 6px; border-bottom: 1px solid rgba(255,255,255,.07);
+}
+.call-panel-info { display: flex; align-items: center; gap: 8px; }
+.call-panel-persona { font-size: 12px; font-weight: 700; color: #e2e8f0; }
+.call-panel-timer-sm {
+    font-size: 11px; color: var(--healthy); font-family: 'Courier New', monospace;
+    font-weight: 600;
+}
+.call-panel-status {
+    font-size: 10px; color: rgba(255,255,255,.4); font-weight: 500;
+    letter-spacing: .3px; text-transform: uppercase;
+}
+.call-panel-controls { display: flex; gap: 6px; }
+.cp-btn {
+    border: none; border-radius: 10px; padding: 3px 9px;
+    font-size: 10px; font-weight: 700; cursor: pointer; transition: background .15s;
+}
+.cp-btn-mute        { background: rgba(255,255,255,.12); color: #cbd5e1; }
+.cp-btn-mute:hover  { background: rgba(255,255,255,.2); }
+.cp-btn-mute.muted  { background: rgba(239,68,68,.3); color: #fca5a5; }
+.cp-btn-end         { background: rgba(239,68,68,.6); color: #fff; }
+.cp-btn-end:hover   { background: var(--error); }
+
+/* Waveform canvas */
+.call-waveform {
+    padding: 6px 12px 0; height: 44px;
+}
+.call-waveform canvas {
+    width: 100%; height: 36px; display: block; border-radius: 4px;
+    background: rgba(255,255,255,.03);
+}
+
+/* Speaking status */
+.call-speaking-status {
+    padding: 3px 12px 6px;
+    font-size: 10px; color: rgba(255,255,255,.35); font-style: italic;
+    min-height: 20px; transition: color .2s;
+}
+.call-speaking-status.ai-speaking { color: var(--healthy); font-style: normal; font-weight: 600; }
+.call-speaking-status.agent-speaking { color: #60a5fa; font-style: normal; font-weight: 600; }
+
+/* Live transcript */
+.call-transcript {
+    flex: 1; overflow-y: auto; padding: 6px 10px;
+    max-height: 160px; min-height: 60px;
+    display: flex; flex-direction: column; gap: 4px;
+}
+.tx-msg {
+    max-width: 85%; padding: 5px 9px;
+    border-radius: 10px; font-size: 11px; line-height: 1.4; word-break: break-word;
+}
+.tx-ai   { background: rgba(16,185,129,.15); color: #a7f3d0; align-self: flex-start;
+           border-bottom-left-radius: 3px; }
+.tx-agent { background: rgba(96,165,250,.15); color: #bfdbfe; align-self: flex-end;
+            border-bottom-right-radius: 3px; }
+.tx-placeholder {
+    text-align: center; color: rgba(255,255,255,.2); font-size: 11px; font-style: italic;
+    padding: 12px 0;
+}
+
+
+</style>
+</head>
+<body>
+
+<!-- ==================================================================
+     DEMO LAUNCHER
+     ================================================================== -->
+<div id="launcher">
+    <div class="launcher-badge">Built with Microsoft Azure AI</div>
+    <img src="/static/contoso-logo.png" alt="Contoso Resorts" class="launcher-logo">
+    <div class="launcher-title">AI Customer Intelligence Demo</div>
+    <div class="launcher-subtitle">Select a customer scenario to begin</div>
+    <div class="launcher-cards">
+        <div class="persona-card" role="button" tabindex="0" onclick="selectPersona('dana')" onkeydown="if(event.key==='Enter'||event.key===' ')selectPersona('dana')">
+            <div class="persona-avatar" style="--avatar-c1:#6B8CA6;--avatar-c2:#8FAABB" id="avatar-dana"><img src="/static/dana_160.png" alt="Dana Lakehouse"></div>
+            <div class="persona-name">Dana Lakehouse</div>
+            <div class="persona-tier tier-platinum">Platinum</div>
+            <div class="persona-scenario">The Loyal VIP</div>
+            <div class="persona-desc">Last-minute getaway — AI recommends based on history</div>
+            <button class="persona-btn">Launch Scenario</button>
+        </div>
+        <div class="persona-card" role="button" tabindex="0" onclick="selectPersona('anne')" onkeydown="if(event.key==='Enter'||event.key===' ')selectPersona('anne')">
+            <div class="persona-avatar" style="--avatar-c1:#7A9B6B;--avatar-c2:#9ABF85" id="avatar-anne"><img src="/static/anne_160.png" alt="Anne Thropic"></div>
+            <div class="persona-name">Anne Thropic</div>
+            <div class="persona-tier tier-gold">Gold</div>
+            <div class="persona-scenario">The Planner</div>
+            <div class="persona-desc">Special request — AI mines survey free-text for preferences</div>
+            <button class="persona-btn">Launch Scenario</button>
+        </div>
+        <div class="persona-card" role="button" tabindex="0" onclick="selectPersona('victor')" onkeydown="if(event.key==='Enter'||event.key===' ')selectPersona('victor')">
+            <div class="persona-avatar" style="--avatar-c1:#8B7DA5;--avatar-c2:#A89BC2" id="avatar-victor"><img src="/static/victor_160.png" alt="Victor Storr"></div>
+            <div class="persona-name">Victor Storr</div>
+            <div class="persona-tier tier-silver">Silver</div>
+            <div class="persona-scenario">The Flexible Traveler</div>
+            <div class="persona-desc">BusinessBK-0003003 trip changes location — AI finds right alternative property</div>
+            <button class="persona-btn">Launch Scenario</button>
+        </div>
+    </div>
+    <div class="launcher-browse-row">
+        <button class="browse-btn" onclick="browseApp()">
+            <div style="font-size:28px;margin-bottom:12px;">&#9776;</div>
+            Browse The App
+        </button>
+    </div>
+</div>
+
+<!-- ==================================================================
+     PMS SHELL
+     ================================================================== -->
+<div id="pms">
+    <!-- Header -->
+    <header class="pms-header">
+        <div class="header-logo-area">
+            <img src="/static/contoso-logo.png" alt="Contoso Resorts" class="header-logo">
+        </div>
+        <div class="header-body">
+            <div class="header-top">
+                <span class="header-title">Contoso Resorts &middot; Guest Intelligence</span>
+                <div class="header-divider"></div>
+                <div class="header-property">
+                    <span>&#9962;</span> <span>All Properties</span>
+                </div>
+                <div class="header-divider"></div>
+                <div class="header-user">
+                    <div class="header-user-icon">&#9786;</div>
+                    <span>Agent: Front Desk</span>
+                </div>
+                <div class="header-divider"></div>
+                <div class="db-indicator" id="dbIndicator">
+                    <span class="db-dot" id="dbDot"></span>
+                    <span id="dbLabel">Checking...</span>
+                </div>
+            </div>
+            <div class="header-scenario empty" id="headerScenario">
+                <span class="scenario-icon">&#127911;</span>
+                <span class="scenario-name" id="headerScenarioName"></span>
+                <span class="scenario-desc" id="headerScenarioDesc"></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <nav class="pms-sidebar">
+        <button class="sidebar-item" data-view="search" title="Guest Search">
+            <span>&#128269;</span><span class="sidebar-label">Search</span>
+        </button>
+        <button class="sidebar-item active" data-view="dashboard" title="Dashboard">
+            <span>&#9635;</span><span class="sidebar-label">Home</span>
+        </button>
+        <button class="sidebar-item" data-view="rooms" title="Rooms">
+            <span>&#127974;</span><span class="sidebar-label">Rooms</span>
+        </button>
+        <button class="sidebar-item" data-view="reports" title="Reports">
+            <span>&#128202;</span><span class="sidebar-label">Reports</span>
+        </button>
+        <div class="sidebar-spacer"></div>
+        <button class="sidebar-item" data-view="settings" title="Settings">
+            <span>&#9881;</span><span class="sidebar-label">Config</span>
+        </button>
+    </nav>
+
+    <!-- Main content area -->
+    <div class="pms-main">
+        <!-- Left panel: guest data -->
+        <div class="left-panel">
+            <!-- Dashboard home view -->
+            <div class="dashboard-view" id="dashboardView">
+                <div class="dash-welcome" id="dashWelcome">Welcome, Front Desk Agent</div>
+                <div class="dash-subtitle">Contoso Resorts &middot; Property Management System</div>
+
+                <div class="dash-stats" id="dashStats">
+                    <div class="dash-stat"><div class="dash-stat-label">Properties</div><div class="dash-stat-value">5</div></div>
+                    <div class="dash-stat"><div class="dash-stat-label">Active Guests</div><div class="dash-stat-value">~5,000</div></div>
+                    <div class="dash-stat"><div class="dash-stat-label">Bookings</div><div class="dash-stat-value">~12,000</div></div>
+                    <div class="dash-stat"><div class="dash-stat-label">System</div><div class="dash-stat-value" style="font-size:13px;color:var(--healthy)">Online</div></div>
+                </div>
+                <div class="dash-quick-actions">
+                    <h3>Quick Actions</h3>
+                    <button class="dash-action-btn" onclick="switchToGuestSearch()">&#128269; Guest Search</button>
+                    <button class="dash-action-btn" onclick="switchToGuestSearch(); switchTab('availability')">&#128197; Check Availability</button>
+                </div>
+            </div>
+
+            <!-- Guest search view (hidden until navigated) -->
+            <div class="guest-view hidden" id="guestView">
+            <!-- Search bar -->
+            <div class="search-bar">
+                <input type="text" class="search-input" id="searchInput"
+                       placeholder="Search guest or ask a question...">
+                <button class="new-search-btn" id="newSearchBtn" onclick="clearGuest()">&#10005; New Search</button>
+                <button class="search-btn" onclick="doSearch()">
+                    <span>&#128269;</span> Search
+                </button>
+            </div>
+
+            <!-- Search results panel (shown after name search, hidden by default) -->
+            <div id="searchResults" class="search-results-panel hidden"></div>
+
+            <!-- Guest profile card -->
+            <div class="guest-card" id="guestCard">
+                <button class="guest-card-close" onclick="clearGuest()" title="New Search">&#10005;</button>
+                <div class="guest-card-header">
+                    <div class="guest-card-avatar" id="guestAvatar">--</div>
+                    <div>
+                        <div>
+                            <span class="guest-card-name" id="guestName">—</span>
+                            <span class="loyalty-badge" id="guestLoyaltyBadge">—</span>
+                        </div>
+                        <div class="guest-card-id" id="guestIdLabel">—</div>
+                    </div>
+                </div>
+                <div class="guest-fields" id="guestFields">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tab-bar" id="tabBar" role="tablist">
+                <button class="tab-btn active" data-tab="reservations" role="tab" aria-selected="true">Reservations</button>
+                <button class="tab-btn" data-tab="availability" role="tab" aria-selected="false">Availability</button>
+                <button class="tab-btn" data-tab="notes" role="tab" aria-selected="false">Notes &amp; Requests</button>
+            </div>
+
+            <!-- Tab content -->
+            <div class="tab-content" id="tabContent">
+                <!-- Reservations -->
+                <div class="tab-pane active" id="tab-reservations">
+                    <div class="placeholder-msg" id="resPlaceholder">
+                        <span class="icon">&#128196;</span>
+                        Select a guest to view reservations
+                    </div>
+                    <div style="overflow-x:auto">
+                        <table class="data-table" id="resTable" style="display:none">
+                            <thead>
+                                <tr>
+                                    <th>Booking</th><th>Property</th><th>Check-In</th>
+                                    <th>Check-Out</th><th>Room</th><th>Rate</th>
+                                    <th>Total</th><th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Availability -->
+                <div class="tab-pane" id="tab-availability">
+                    <div class="avail-controls">
+                        <label style="font-size:12px;font-weight:600;color:var(--text-secondary)">From:</label>
+                        <input type="date" id="availFrom">
+                        <label style="font-size:12px;font-weight:600;color:var(--text-secondary)">To:</label>
+                        <input type="date" id="availTo">
+                        <button onclick="loadAvailability()">Check Availability</button>
+                    </div>
+                    <div style="overflow-x:auto">
+                        <table class="data-table" id="availTable" style="display:none">
+                            <thead>
+                                <tr>
+                                    <th>Property</th><th>Date</th><th>Room Type</th>
+                                    <th>Total</th><th>Booked</th><th>Available</th>
+                                </tr>
+                            </thead>
+                            <tbody id="availBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="placeholder-msg" id="availPlaceholder">
+                        <span class="icon">&#128197;</span>
+                        Set dates and check availability
+                    </div>
+                </div>
+
+                <!-- Notes & Requests -->
+
+                <div class="tab-pane" id="tab-notes">
+                    <div class="placeholder-msg" id="notesPlaceholder">
+                        <span class="icon">&#128221;</span>
+                        Select a guest to view notes and requests
+                    </div>
+                    <div id="notesList"></div>
+                </div>
+            </div>
+            </div><!-- /guest-view -->
+        </div>
+
+        <!-- Right panel: call panel (active calls) + AI Intelligence shell -->
+        <div class="right-panel">
+            <!-- Call panel — only visible during an active call -->
+            <div class="call-panel" id="callPanel">
+                <div class="call-panel-header">
+                    <div class="call-panel-info">
+                        <span class="call-dot"></span>
+                        <span class="call-panel-persona" id="cpPersonaName"></span>
+                        <span class="call-panel-timer-sm" id="cpTimer">0:00</span>
+                    </div>
+                    <span class="call-panel-status" id="cpStatus">connecting&hellip;</span>
+                    <div class="call-panel-controls">
+                        <button class="cp-btn cp-btn-mute" id="cpMuteBtn" onclick="toggleMute()">&#127908; Mute</button>
+                        <button class="cp-btn cp-btn-end" onclick="endCall()">&#128245; End</button>
+                    </div>
+                </div>
+                <div class="call-waveform">
+                    <canvas id="waveformCanvas"></canvas>
+                </div>
+                <div class="call-speaking-status" id="cpSpeakingStatus">Waiting for greeting&hellip;</div>
+                <div class="call-transcript" id="callTranscript">
+                    <div class="tx-placeholder" id="txPlaceholder">Transcript will appear here</div>
+                </div>
+            </div>
+
+            <div class="ai-panel-header">
+                <div class="ai-panel-title">
+                    <span class="ai-icon">&#10024;</span> Guest Intelligence
+                </div>
+                <span class="timing-badge" id="intelligenceTimingBadge" style="display:none"></span>
+            </div>
+            <div class="ai-sources" id="aiSources">
+                <span class="ai-source-badge ai-source-pms" id="srcStays" title="Booking history from PMS">Stays</span>
+                <span class="ai-source-badge ai-source-medallia" id="srcSurveys" title="Post-stay feedback">Surveys</span>
+                <span class="ai-source-badge ai-source-fareharbor" id="srcExperiences" title="Activity &amp; experience bookings">Experiences</span>
+                <span class="ai-source-badge ai-source-hotsos" id="srcRequests" title="In-stay operations requests (HotSOS)">Requests</span>
+            </div>
+            <div class="pipeline-steps" id="pipelineSteps">
+                <span class="pipeline-step" id="step-retrieval">Retrieval</span>
+                <span class="pipeline-step" id="step-sentiment">Sentiment</span>
+                <span class="pipeline-step" id="step-intelligence">Intelligence</span>
+                <span class="pipeline-step" id="step-validation">Validation</span>
+            </div>
+            <div class="ai-panel-body">
+                <div class="ai-section" id="aiSectionIntelligence">
+                    <div class="ai-section-header" onclick="toggleAiSection('aiSectionIntelligence')">
+                        Guest Intelligence
+                        <i class="ai-chevron">&#9660;</i>
+                    </div>
+                    <div class="ai-section-body" id="aiIntelligence">
+                        Load a guest profile to see AI-generated pattern analysis
+                    </div>
+                </div>
+                <div class="ai-section collapsed" id="aiSectionSentiment">
+                    <div class="ai-section-header" onclick="toggleAiSection('aiSectionSentiment')">
+                        Sentiment Summary
+                        <i class="ai-chevron">&#9660;</i>
+                    </div>
+                    <div class="ai-section-body" id="aiSentiment">
+                        Survey analysis from Medallia data will appear here
+                    </div>
+                </div>
+                <div class="ai-section collapsed" id="aiSectionAlerts">
+                    <div class="ai-section-header" onclick="toggleAiSection('aiSectionAlerts')">
+                        Alerts &amp; Warnings
+                        <i class="ai-chevron">&#9660;</i>
+                    </div>
+                    <div class="ai-section-body" id="aiAlerts">
+                        Content-safety validated alerts and flags
+                    </div>
+                </div>
+                <button class="rec-footer-btn" id="recommendBtn" disabled
+                        title="Run full recommendations analysis">
+                    &#127775; View Recommendations
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status bar -->
+    <footer class="pms-status">
+        <div class="status-item" id="statusDb">&#128279; Connecting...</div>
+        <div class="status-sep"></div>
+        <div class="status-item" id="statusPersona">No scenario loaded</div>
+        <div class="status-sep"></div>
+        <div class="status-item" id="statusLastQuery">—</div>
+        <div style="flex:1"></div>
+        <button class="status-switch" onclick="resetToLauncher()" title="Return to demo launcher">&#9664; Change Scenario</button>
+        <div class="status-sep"></div>
+    </footer>
+</div>
+
+<!-- SQL Popup overlay -->
+<div class="sql-popup-overlay" id="sqlPopup" role="dialog" aria-modal="true" aria-labelledby="sqlPopupTitle">
+    <div class="sql-popup">
+        <div class="sql-popup-header">
+            <span id="sqlPopupTitle">&#128270; Generated SQL</span>
+            <button class="sql-popup-close" onclick="closeSqlPopup()">&times;</button>
+        </div>
+        <div class="sql-popup-body">
+            <div class="sql-popup-question" id="sqlPopupQuestion"></div>
+            <pre class="sql-popup-code" id="sqlPopupCode"></pre>
+        </div>
+    </div>
+</div>
+
+<!-- ==================================================================
+     ACD INCOMING CALL CARD — fixed top-centre overlay
+     ================================================================== -->
+<div class="acd-card" id="acdCard">
+    <div class="acd-card-inner">
+        <div class="acd-card-heading">
+            <div class="acd-ring-icon">&#128222;</div>
+            <div class="acd-heading-text">
+                <div class="acd-heading-title">Incoming Voice Call</div>
+                <div class="acd-heading-queue">&#9679; Customer Service</div>
+            </div>
+        </div>
+        <div class="acd-timeout-bar"><div class="acd-timeout-fill" id="acdTimeoutFill"></div></div>
+        <div class="acd-info">
+            <div class="acd-row">
+                <span class="acd-label">Queue</span>
+                <span class="acd-value">Customer Service</span>
+            </div>
+            <div class="acd-row">
+                <span class="acd-label">Time in Queue</span>
+                <span class="acd-value" id="acdTimeInQueue">0:00</span>
+            </div>
+            <div class="acd-row">
+                <span class="acd-label">Caller ID</span>
+                <span class="acd-value mono" id="acdCallerId">Unknown</span>
+            </div>
+            <div class="acd-row">
+                <span class="acd-label">Channel</span>
+                <span class="acd-value">Voice &middot; Inbound</span>
+            </div>
+        </div>
+        <div class="acd-buttons">
+            <button class="acd-btn-answer" id="acdAnswerBtn" onclick="answerCall()">&#9990; Answer</button>
+            <button class="acd-btn-decline" onclick="declineCall()">&#128245; Decline</button>
+        </div>
+    </div>
+</div>
+
+<!-- Active call bar — fixed top-centre, replaces header pill -->
+<div class="call-bar" id="callBar">
+    <span class="call-dot"></span>
+    <span style="font-size:10px;color:rgba(255,255,255,.5);font-weight:600">LIVE CALL</span>
+    <span class="call-name" id="callPersonaName"></span>
+    <span class="call-timer" id="callTimer">0:00</span>
+    <button class="call-btn-mute" id="callMuteBtn" onclick="toggleMute()" title="Mute/Unmute">&#127908; Mute</button>
+    <button class="call-btn-end" onclick="endCall()" title="End call">&#128245; End</button>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toasts" role="status" aria-live="polite" aria-atomic="false"></div>
+
+
+<script>
+/* ===================================================================
+   JavaScript — Contoso Resorts PMS
+   =================================================================== */
+
+// --- Persona definitions ---
+const PERSONAS = {
+    dana: {
+        id: 'dana', name: 'Dana Lakehouse', tier: 'Platinum',
+        guestId: 'G-0001001', initials: 'DL',
+        voice: 'shimmer',
+        callerId: '+1 (312) 555-0147',
+        callOpening: null,
+        scenario: 'The Loyal VIP — Last-Minute Trip',
+        profileQuery: "Show the complete guest profile for Dana Lakehouse from the Guests table including GuestID, FirstName, LastName, Email, Phone, HomeCity, Country, LoyaltyTier, LoyaltyPoints, MemberSince, Preferences",
+        bookingsQuery: "Show all reservations for Dana Lakehouse with BookingID, the property Name as PropertyName, CheckIn, CheckOut, RoomType, RatePerNight, TotalAmount, Status, SpecialRequests ordered by CheckIn descending",
+    },
+    anne: {
+        id: 'anne', name: 'Anne Thropic', tier: 'Gold',
+        guestId: 'G-0002001', initials: 'AT',
+        voice: 'coral',
+        callerId: '+1 (404) 555-0193',
+        callOpening: null,
+        scenario: 'The Planner — Special Request Before Arrival',
+        profileQuery: "Show the complete guest profile for Anne Thropic from the Guests table including GuestID, FirstName, LastName, Email, Phone, HomeCity, Country, LoyaltyTier, LoyaltyPoints, MemberSince, Preferences",
+        bookingsQuery: "Show all reservations for Anne Thropic with BookingID, the property Name as PropertyName, CheckIn, CheckOut, RoomType, RatePerNight, TotalAmount, Status, SpecialRequests ordered by CheckIn descending",
+    },
+    victor: {
+        id: 'victor', name: 'Victor Storr', tier: 'Silver',
+        guestId: 'G-0003001', initials: 'VS',
+        voice: 'echo',
+        callerId: '+1 (212) 555-0068',
+        callOpening: null,
+        scenario: 'The Flexible Traveler — Date Change, Sold Out',
+        profileQuery: "Show the complete guest profile for Victor Storr from the Guests table including GuestID, FirstName, LastName, Email, Phone, HomeCity, Country, LoyaltyTier, LoyaltyPoints, MemberSince, Preferences",
+        bookingsQuery: "Show all reservations for Victor Storr with BookingID, the property Name as PropertyName, CheckIn, CheckOut, RoomType, RatePerNight, TotalAmount, Status, SpecialRequests ordered by CheckIn descending",
+    }
+};
+
+// --- Application state ---
+const state = {
+    persona:  null,
+    guest:    null,
+    bookings: [],
+    queryLog: [],     // { question, sql, rowCount, ts }
+    dbHealthy: null,
+    analysis: null,
+    call:     null,   // { active, persona } when a call is live
+};
+
+// --- API helpers ---
+const API = '';
+
+async function apiQuery(question) {
+    const res = await fetch(API + '/api/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question }),
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({ detail: res.statusText }));
+        throw new Error(typeof err.detail === 'string' ? err.detail : JSON.stringify(err.detail));
+    }
+    const data = await res.json();
+    state.queryLog.push({ question: data.question, sql: data.sql, rowCount: data.row_count, ts: new Date() });
+    updateStatusBar();
+    return data;
+}
+
+async function apiHealth() {
+    try {
+        const res = await fetch(API + '/api/health');
+        const data = await res.json();
+        state.dbHealthy = data.status === 'healthy';
+    } catch {
+        state.dbHealthy = false;
+    }
+    updateDbIndicator();
+}
+
+// ── Guest Intelligence stream (Epic 3.3.4) ────────────────────────────────
+
+function _stepReset() {
+    ['retrieval','sentiment','intelligence','validation'].forEach(s => {
+        const el = document.getElementById('step-' + s);
+        if (el) {
+            el.className = 'pipeline-step';
+            const label = s.charAt(0).toUpperCase() + s.slice(1);
+            el.textContent = label;
+        }
+    });
+}
+function _stepRunning(name) {
+    const el = document.getElementById('step-' + name);
+    if (el) el.className = 'pipeline-step running';
+}
+function _stepDone(name, ms) {
+    const el = document.getElementById('step-' + name);
+    if (!el) return;
+    el.className = 'pipeline-step done';
+    const label = name.charAt(0).toUpperCase() + name.slice(1);
+    el.innerHTML = ms
+        ? label + ' <span class="step-ms">' + Math.round(ms) + 'ms</span>'
+        : label;
+}
+function _stepError(name) {
+    const el = document.getElementById('step-' + name);
+    if (el) el.className = 'pipeline-step error';
+}
+
+// Show fatal + retry panel in Intelligence section (Task 3.3.8)
+function _showFatalError(guestId, message) {
+    const el = document.getElementById('aiIntelligence');
+    if (!el) return;
+    el.className = 'ai-section-body populated';
+    el.innerHTML =
+        '<div class="pipeline-error-panel">' +
+            '<strong>&#9888; Analysis Failed</strong>' +
+            esc(message || 'An error occurred while connecting to the intelligence pipeline.') +
+            '<br><button class="pipeline-retry-btn" onclick="apiAnalyzeStream(\'' + esc(guestId) + '\')">&#8635; Retry</button>' +
+        '</div>';
+    const timingBadge = document.getElementById('intelligenceTimingBadge');
+    if (timingBadge) { timingBadge.textContent = 'Error'; timingBadge.className = 'timing-badge'; }
+}
+
+// Show inline warning for non-fatal agent failures (Task 3.3.8)
+function _agentWarn(elementId, agentName, message) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    el.className = 'ai-section-body populated';
+    el.innerHTML =
+        '<div class="agent-warn">' +
+            '<span class="agent-warn-icon">&#9888;</span>' +
+            '<span><strong>' + esc(agentName) + ' unavailable:</strong> ' + esc(message || 'Agent returned no data.') +
+            ' Pipeline continued.</span>' +
+        '</div>';
+}
+
+function apiAnalyzeStream(guestId) {
+    _stepReset();
+    _stepRunning('retrieval');
+
+    const timingBadge = document.getElementById('intelligenceTimingBadge');
+    if (timingBadge) { timingBadge.style.display = ''; timingBadge.textContent = 'Running\u2026'; timingBadge.className = 'timing-badge active'; }
+
+    const recBtn = document.getElementById('recommendBtn');
+    if (recBtn) recBtn.disabled = true;
+
+    // Track which non-fatal errors have occurred to show hints
+    const agentErrors = {};
+    const streamStart = Date.now();
+
+    const es = new EventSource(API + '/api/analyze-stream?guest_id=' + encodeURIComponent(guestId));
+
+    es.addEventListener('start', () => { _stepRunning('retrieval'); });
+
+    es.addEventListener('retrieval', (e) => {
+        const d = JSON.parse(e.data);
+        _stepDone('retrieval', d.retrieval_ms);
+        _stepRunning('sentiment');
+        const srcStays = document.getElementById('srcStays');
+        if (srcStays) srcStays.classList.add('connected');
+        // Light up Requests badge if service requests were retrieved (Epic 4.1)
+        if (d.service_requests_count > 0) {
+            const srcReq = document.getElementById('srcRequests');
+            if (srcReq) srcReq.classList.add('connected');
+        }
+    });
+
+    es.addEventListener('sentiment', (e) => {
+        const d = JSON.parse(e.data);
+        _stepDone('sentiment', d.sentiment && d.sentiment.sentiment_ms);
+        _stepRunning('intelligence');
+        if (d.sentiment) {
+            renderSentiment(d.sentiment);
+            const srcSurveys = document.getElementById('srcSurveys');
+            if (srcSurveys) srcSurveys.classList.add('connected');
+        } else if (agentErrors.sentiment) {
+            _agentWarn('aiSentiment', 'Sentiment Agent', agentErrors.sentiment);
+        }
+    });
+
+    es.addEventListener('intelligence', (e) => {
+        const d = JSON.parse(e.data);
+        _stepDone('intelligence', d.intelligence && d.intelligence.intelligence_ms);
+        _stepRunning('validation');
+        if (d.intelligence) {
+            renderIntelligence(d.intelligence);
+            const srcExp = document.getElementById('srcExperiences');
+            if (srcExp) srcExp.classList.add('connected');
+        } else if (agentErrors.intelligence) {
+            _agentWarn('aiIntelligence', 'Intelligence Agent', agentErrors.intelligence);
+        } else {
+            _agentWarn('aiIntelligence', 'Intelligence Agent', 'No patterns could be extracted this session.');
+        }
+    });
+
+    es.addEventListener('validation', (e) => {
+        const d = JSON.parse(e.data);
+        _stepDone('validation', d.validation && d.validation.validation_ms);
+        renderValidation(d.validation);
+    });
+
+    es.addEventListener('done', (e) => {
+        es.close();
+        const data = JSON.parse(e.data);
+        state.analysis = data;
+        const totalSec = ((Date.now() - streamStart) / 1000).toFixed(1);
+        if (timingBadge) { timingBadge.textContent = totalSec + 's'; timingBadge.className = 'timing-badge'; }
+        document.getElementById('aiSectionIntelligence').classList.remove('collapsed');
+        document.getElementById('aiSectionSentiment').classList.add('collapsed');
+        document.getElementById('aiSectionAlerts').classList.add('collapsed');
+        if (recBtn) {
+            recBtn.disabled = false;
+            recBtn.textContent = '\u2728 View Recommendations';
+            recBtn.onclick = () => apiRecommend(guestId);
+        }
+        toast('Guest Intelligence ready', 'success');
+    });
+
+    es.addEventListener('error', (e) => {
+        if (e && e.data) {
+            // Agent-level error from the backend (non-fatal — pipeline continues)
+            try {
+                const d = JSON.parse(e.data);
+                const agent = d.agent || 'unknown';
+                _stepError(agent);
+                agentErrors[agent] = d.message || 'Agent returned an error.';
+                console.warn('SSE agent error [' + agent + ']:', d.message);
+                // For retrieval failure the stream also terminates, so handle below
+                if (agent === 'retrieval') {
+                    es.close();
+                    _showFatalError(guestId, d.message);
+                }
+            } catch {}
+        } else {
+            // Native EventSource transport error — stream closed unexpectedly
+            es.close();
+            _showFatalError(guestId, 'Connection to the intelligence stream was lost.');
+            toast('Stream connection lost — click Retry in the panel', 'error');
+        }
+    });
+}
+
+// ── On-demand recommendations (Epic 3.3.7) ────────────────────────────────
+
+async function apiRecommend(guestId) {
+    const recBtn = document.getElementById('recommendBtn');
+    if (recBtn) { recBtn.disabled = true; recBtn.textContent = '\u23F3 Loading\u2026'; }
+    try {
+        const res = await fetch(API + '/api/recommend', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ guest_id: guestId }),
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({ detail: res.statusText }));
+            throw new Error(typeof err.detail === 'string' ? err.detail : JSON.stringify(err.detail));
+        }
+        const data = await res.json();
+        if (!state.analysis) state.analysis = data;
+        state.analysis.reasoning = data.reasoning;
+        state.analysis.validation = data.validation;
+        // Render a brief recommendations overlay inside the Intelligence section
+        renderRecommendations(data.validation);
+        renderValidation(data.validation);
+        toast('Recommendations loaded', 'success');
+    } catch (err) {
+        console.error('Recommend error:', err);
+        toast('Recommendations error: ' + err.message, 'error');
+    } finally {
+        if (recBtn) { recBtn.disabled = false; recBtn.textContent = '\u2728 View Recommendations'; }
+    }
+}
+
+// --- Toast notifications ---
+function toast(msg, type = 'info') {
+    const el = document.createElement('div');
+    el.className = 'toast ' + type;
+    el.textContent = msg;
+    document.getElementById('toasts').appendChild(el);
+    setTimeout(() => el.remove(), 5000);
+}
+
+// --- DB indicator ---
+function updateDbIndicator() {
+    const dot = document.getElementById('dbDot');
+    const label = document.getElementById('dbLabel');
+    dot.className = 'db-dot ' + (state.dbHealthy ? 'healthy' : (state.dbHealthy === false ? 'unhealthy' : ''));
+    label.textContent = state.dbHealthy ? 'Connected' : (state.dbHealthy === false ? 'Disconnected' : 'Checking...');
+    document.getElementById('statusDb').innerHTML =
+        (state.dbHealthy ? '&#9989;' : '&#10060;') + ' ContosoResortsDemo';
+}
+
+// --- Status bar ---
+function updateStatusBar() {
+    const p = state.persona;
+    document.getElementById('statusPersona').textContent = p ? p.scenario : 'No scenario loaded';
+    const last = state.queryLog[state.queryLog.length - 1];
+    if (last) {
+        document.getElementById('statusLastQuery').textContent =
+            last.rowCount + ' rows · ' + last.ts.toLocaleTimeString();
+    }
+}
+
+// ===================================================================
+// VOICE CALL — GPT Realtime WebSocket pipeline (Epic 3.1)
+// ===================================================================
+
+// --- Call-scoped state (separate from global state to avoid confusion) ---
+let rtWs          = null;   // active WebSocket
+let rtMicStream   = null;   // MediaStream from getUserMedia
+let rtAudioCtx    = null;   // AudioContext for capture + playback
+let rtScriptProc  = null;   // ScriptProcessorNode (mic capture)
+let rtNextPlay    = 0;      // scheduled timestamp for next audio chunk
+let rtMuted       = false;
+let rtTimerRef    = null;
+let rtCallStart   = null;
+let rtAnalyser    = null;   // AnalyserNode for waveform visualisation
+let rtWafRef      = null;   // requestAnimationFrame ref for waveform loop
+let acdTimeoutRef = null;   // 20s auto-decline timer
+let acdQueueRef   = null;   // time-in-queue ticker
+let acdPersona    = null;   // persona waiting to be answered
+let rtRingCtx     = null;   // AudioContext used for ring tone
+let rtRingNodes   = [];     // oscillator nodes for ring tone cleanup
+
+// --- Ring tone (North-American dual-tone: 440 + 480 Hz, 2 s on / 4 s off) ---
+function startRing() {
+    stopRing();
+    rtRingCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function burst() {
+        if (!rtRingCtx) return;
+        const t = rtRingCtx.currentTime;
+        [440, 480].forEach(freq => {
+            const osc  = rtRingCtx.createOscillator();
+            const gain = rtRingCtx.createGain();
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.07, t);
+            gain.gain.setValueAtTime(0.0,  t + 2);
+            osc.connect(gain);
+            gain.connect(rtRingCtx.destination);
+            osc.start(t);
+            osc.stop(t + 2);
+            rtRingNodes.push(osc);
+        });
+        rtRingNodes._nextBurst = setTimeout(burst, 6000);
+    }
+    burst();
+}
+function stopRing() {
+    if (rtRingNodes._nextBurst) { clearTimeout(rtRingNodes._nextBurst); delete rtRingNodes._nextBurst; }
+    rtRingNodes.forEach(n => { try { n.stop(); } catch {} });
+    rtRingNodes = [];
+    if (rtRingCtx) { rtRingCtx.close().catch(() => {}); rtRingCtx = null; }
+}
+
+// --- ACD card: show incoming call notification ---
+function showAcdCard(persona) {
+    acdPersona = persona;
+    document.getElementById('acdCallerId').textContent = persona.callerId || 'Unknown';
+
+    // Randomise time-in-queue (8–18 s elapsed when call routes to agent)
+    let queueSecs = Math.floor(Math.random() * 11) + 8;
+    document.getElementById('acdTimeInQueue').textContent =
+        '0:' + String(queueSecs).padStart(2, '0');
+    acdQueueRef = setInterval(() => {
+        queueSecs++;
+        const m = Math.floor(queueSecs / 60), s = queueSecs % 60;
+        document.getElementById('acdTimeInQueue').textContent =
+            m + ':' + String(s).padStart(2, '0');
+    }, 1000);
+
+    // Timeout bar drains in 20 s; auto-decline if not answered
+    const fill = document.getElementById('acdTimeoutFill');
+    fill.style.transition = 'none';
+    fill.style.width = '100%';
+    requestAnimationFrame(() => {
+        fill.style.transition = 'width 20s linear';
+        fill.style.width = '0%';
+    });
+    acdTimeoutRef = setTimeout(() => declineCall(true), 20000);
+
+    // Show card (CSS handles slide-in via .visible class)
+    document.getElementById('acdCard').classList.add('visible');
+    startRing();
+
+    // Keyboard shortcuts: Enter = answer, Escape = decline
+    document._acdKeyHandler = e => {
+        if (e.key === 'Enter')  { e.preventDefault(); answerCall(); }
+        else if (e.key === 'Escape') declineCall();
+    };
+    document.addEventListener('keydown', document._acdKeyHandler);
+}
+
+function hideAcdCard() {
+    document.getElementById('acdCard').classList.remove('visible');
+    clearInterval(acdQueueRef); acdQueueRef = null;
+    clearTimeout(acdTimeoutRef); acdTimeoutRef = null;
+    stopRing();
+    if (document._acdKeyHandler) {
+        document.removeEventListener('keydown', document._acdKeyHandler);
+        document._acdKeyHandler = null;
+    }
+}
+
+// --- Answer / Decline ---
+function answerCall() {
+    hideAcdCard();
+    const persona = acdPersona; acdPersona = null;
+    if (!persona) return;
+    switchToGuestSearch();
+    startCall(persona);
+    // Profile load removed — agent searches by guest name after answering
+}
+
+function declineCall(timedOut = false) {
+    hideAcdCard();
+    acdPersona = null;
+    if (timedOut) toast('Missed call — routed to next available agent', 'info');
+    else          toast('Call declined', 'info');
+    resetToLauncher();
+}
+
+// --- Waveform visualisation (RAF loop, driven by AnalyserNode) ---
+function rtStartWaveform() {
+    const canvas = document.getElementById('waveformCanvas');
+    if (!canvas || !rtAnalyser) return;
+    const ctx  = canvas.getContext('2d');
+    const data = new Uint8Array(rtAnalyser.frequencyBinCount);
+    function draw() {
+        if (!rtAnalyser) return;
+        rtWafRef = requestAnimationFrame(draw);
+        rtAnalyser.getByteTimeDomainData(data);
+        canvas.width = canvas.offsetWidth || 300;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = rtAiSpeaking ? '#10b981' : 'rgba(255,255,255,0.2)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        const sliceW = canvas.width / data.length;
+        data.forEach((v, i) => {
+            const x = i * sliceW;
+            const y = (v / 128.0) * (canvas.height / 2);
+            i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+    }
+    draw();
+}
+
+function rtStopWaveform() {
+    if (rtWafRef) { cancelAnimationFrame(rtWafRef); rtWafRef = null; }
+}
+
+// --- Transcript helper ---
+function appendTranscript(role, text) {
+    // Remove placeholder on first entry
+    const ph = document.getElementById('txPlaceholder');
+    if (ph) ph.remove();
+    const msg = document.createElement('div');
+    msg.className = 'tx-msg tx-' + role;
+    msg.textContent = text;
+    const tx = document.getElementById('callTranscript');
+    tx.appendChild(msg);
+    tx.scrollTop = tx.scrollHeight;
+}
+
+// --- Build per-persona system prompt (static — no DB round-trip) ---
+function buildRealtimePrompt(persona) {
+    const scripts = {
+        dana: `You are Dana Lakehouse, a hotel guest. You called Contoso Resorts.
+
+WHY YOU CALLED: You want to book a trip this weekend. You are a long-time member and expect them to have your preferences on file.
+
+WHO YOU ARE: 38, marketing director, Chicago. You have been a loyalty member for four years. You have had a terrible quarter at work and need to get away. You are not sure where — you want their recommendation.
+
+WHAT'S BENEATH THE SURFACE (do not bring any of this up yourself — only react if the agent leads there):
+- You had a bad experience at one of their properties once. If they suggest it, you will say no firmly.
+- You expect to be recognised as a loyal customer. If they treat you like a first-timer, it bothers you.
+- Once you feel the agent genuinely knows your history, you warm up and relax into the call.
+
+HOW YOU TALK: Polished and direct. Short turns. You soften once you feel looked after.`,
+
+        anne: `You are Anne Thropic, a hotel guest. You called Contoso Resorts.
+
+WHY YOU CALLED: Your daughter's birthday falls during your upcoming stay. You want to see about arranging something special for her.
+
+WHO YOU ARE: 34, teacher, Atlanta. You always stay at the same property. Travelling with your husband and daughter Emma who is turning 8. You have limited time on the phone — there is a child nearby.
+
+WHAT'S BENEATH THE SURFACE (do not bring any of this up yourself — only react if the agent leads there):
+- If the agent asks about activities or what Emma enjoys, you will mention the kids' club and how much she loved picking her own pillows last time.
+- If the agent brings up dining or asks how past stays went, that is when a concern about slow room service from your last visits might come up — but you are a bit embarrassed to raise it.
+- If the agent asks "anything else?" after the birthday, that opens the door for the other topics.
+
+HOW YOU TALK: Warm, enthusiastic about Emma. Slightly hesitant when raising anything negative. Short answers.`,
+
+        victor: `You are Victor Storr, a hotel guest. You called Contoso Resorts.
+
+WHY YOU CALLED: You have an upcoming stay booked in New York (booking BK-0003003, late March). A work obligation has moved to Orlando, so you need to change that booking to the Contoso Resorts property in Orlando instead. That is the whole reason for this call.
+
+WHO YOU ARE: 45, corporate attorney, based in Columbus Ohio. You have stayed at the New York and Orlando properties before. You liked New York a lot more than Orlando. You are making this change because of work — not by choice.
+
+WHAT'S BENEATH THE SURFACE (do not bring any of this up yourself — only react if the agent leads there):
+- If they ask why you are changing, mention the work trip to Orlando briefly.
+- If they try to process the change without asking whether anything matters to you about Orlando, push back — you need to entertain clients at the hotel restaurant, and if they cannot provide good service, you will look elsewhere.
+- If they show they have looked at your history and know what you valued at your New York stay, your tone shifts. That matters to you.
+- If they offer something generic or irrelevant, shut it down in one sentence.
+
+HOW YOU TALK: Clipped. Efficient. You do not fill silences. Warmer only if the agent has clearly read your file.`,
+    };
+    return (scripts[persona.id] || 'You are a Contoso Resorts guest. You called in. You need help with a reservation.') +
+        `\n\nRULES:\n` +
+        `- You are the customer. You placed this call. Open with a brief natural greeting — say your name and your reason for calling in one or two sentences.\n` +
+        `- Keep every reply to 1–2 sentences. Real phone calls have short turns.\n` +
+        `- Answer only what was asked. Do not volunteer extra information or raise new topics unprompted.\n` +
+        `- After each reply, STOP TALKING. Do not add follow-up thoughts, do not ask yourself questions, do not continue the conversation alone. Wait in silence for the agent.\n` +
+        `- If the agent misses the point, show it with tone — do not explain why you are frustrated.\n` +
+        `- Never say "How can I help you?", never summarise what the agent said, never end your turn with an open invitation.\n` +
+        `- Never play both roles. You are ONLY the customer. If you catch yourself speaking for the agent, stop immediately.\n` +
+        `- Never break character or acknowledge being an AI.`;
+}
+
+// --- Start a call ---
+async function startCall(persona) {
+    if (rtWs) return; // already in a call
+    state.call = { active: true, persona };
+    document.getElementById('headerScenarioDesc').textContent =
+        persona.scenario + ' \u00b7 Connecting...';
+
+    try {
+        // Connect to backend WebSocket proxy (backend holds Azure AD credentials).
+        // The Azure OpenAI Realtime resource uses disableLocalAuth=true — browsers
+        // cannot connect directly; the backend proxies all frames via Bearer token.
+        // Use wss:// when served over HTTPS (App Service), ws:// for local dev.
+        const wsProto = location.protocol === 'https:' ? 'wss://' : 'ws://';
+        const wsUrl = wsProto + location.host + '/ws/realtime?persona=' + encodeURIComponent(persona.id);
+        console.log('Realtime WS connecting via backend proxy:', wsUrl);
+        rtWs = new WebSocket(wsUrl, ['realtime']);
+
+        rtWs.onopen = async () => {
+            // 3. Configure session (voice, prompt, audio format, VAD)
+            rtWs.send(JSON.stringify({
+                type: 'session.update',
+                session: {
+                    modalities: ['text', 'audio'],
+                    instructions: buildRealtimePrompt(persona),
+                    voice: persona.voice,
+                    input_audio_format:  'pcm16',
+                    output_audio_format: 'pcm16',
+                    turn_detection: {
+                        type: 'server_vad',
+                        threshold: 0.5,
+                        silence_duration_ms: 600,
+                    },
+                    input_audio_transcription: { model: 'whisper-1' },
+                },
+            }));
+
+            // Inject a hidden trigger so the AI caller has an explicit item
+            // to respond to — makes the opening greeting deterministic.
+            rtWs.send(JSON.stringify({
+                type: 'conversation.item.create',
+                item: {
+                    type: 'message',
+                    role: 'user',
+                    content: [{ type: 'input_text', text: '[The call has been answered. Begin your greeting now.]' }],
+                },
+            }));
+            rtWs.send(JSON.stringify({ type: 'response.create' }));
+
+            // 4. Start microphone
+            await rtStartMic();
+
+            // 5. Show call bar + start waveform
+            rtShowBar(persona);
+            rtStartWaveform();
+            document.getElementById('headerScenarioDesc').textContent =
+                persona.scenario + ' \u00b7 In Call';
+        };
+
+        rtWs.onmessage = (e) => rtOnEvent(JSON.parse(e.data));
+        rtWs.onerror   = (e) => { console.error('Realtime WS error', e); };
+        rtWs.onclose   = (e) => {
+            console.log('Realtime WS closed — code:', e.code, 'reason:', e.reason, 'wasClean:', e.wasClean);
+            if (e.code !== 1000 && !rtUserHangup) {
+                const msg = e.reason ? `WS closed ${e.code}: ${e.reason}` : `WS closed with code ${e.code}`;
+                toast('Call error — ' + msg, 'error');
+            }
+            rtUserHangup = false;
+            if (state.call?.active) rtCleanup();
+        };
+
+    } catch (err) {
+        console.error('startCall error:', err);
+        toast('Could not start call: ' + err.message, 'error');
+        rtCleanup();
+        if (state.persona) {
+            document.getElementById('headerScenarioDesc').textContent =
+                state.persona.scenario + ' \u00b7 Call failed — use Guest Search';
+        }
+    }
+}
+
+// --- Handle events from GPT Realtime ---
+let rtAiTranscript = '';    // accumulates current AI response transcript
+let rtAgentTranscript = ''; // last agent (human) transcript
+let rtAiSpeaking = false;   // true while AI audio is playing — suppresses mic to prevent echo
+
+function rtOnEvent(evt) {
+    switch (evt.type) {
+        case 'response.audio.delta':
+            // AI is actively producing audio — suppress mic to prevent echo feedback
+            rtAiSpeaking = true;
+            document.getElementById('cpSpeakingStatus').textContent = '\uD83C\uDFA4 Guest speaking\u2026';
+            document.getElementById('cpSpeakingStatus').className = 'call-speaking-status ai-speaking';
+            if (evt.delta) rtPlayChunk(evt.delta);
+            break;
+        case 'response.audio_transcript.delta':
+            // Streaming AI customer transcript — accumulate
+            rtAiTranscript += (evt.delta || '');
+            console.log('[AI typing]', rtAiTranscript);
+            break;
+        case 'response.audio_transcript.done':
+            // AI customer finished a turn — emit transcript bubble
+            console.log('[AI said]', evt.transcript || rtAiTranscript);
+            if (rtAiTranscript.trim()) appendTranscript('ai', rtAiTranscript.trim());
+            rtAiTranscript = '';
+            break;
+        case 'conversation.item.input_audio_transcription.completed': {
+            // Agent (human) turn transcribed by Whisper
+            const agentText = evt.transcript ||
+                (evt.item?.content?.[0]?.transcript) || '';
+            rtAgentTranscript = agentText;
+            console.log('[Agent said]', agentText);
+            if (agentText.trim()) appendTranscript('agent', agentText.trim());
+            document.getElementById('cpSpeakingStatus').textContent = 'Listening\u2026';
+            document.getElementById('cpSpeakingStatus').className = 'call-speaking-status';
+            break;
+        }
+        case 'response.done': {
+            // AI response complete. Wait for buffered audio to finish playing,
+            // then re-enable mic and flush any echo from the input buffer.
+            console.log('[Turn complete] response.done');
+            const drainMs = rtAudioCtx
+                ? Math.max(0, (rtNextPlay - rtAudioCtx.currentTime) * 1000) + 300
+                : 300;
+            setTimeout(() => {
+                rtAiSpeaking = false;
+                document.getElementById('cpSpeakingStatus').textContent = 'Listening\u2026';
+                document.getElementById('cpSpeakingStatus').className = 'call-speaking-status';
+                if (rtWs && rtWs.readyState === WebSocket.OPEN) {
+                    rtWs.send(JSON.stringify({ type: 'input_audio_buffer.clear' }));
+                }
+                console.log('[Mic re-enabled after %dms drain]', Math.round(drainMs));
+            }, drainMs);
+            break;
+        }
+        case 'error':
+            console.error('Realtime API error:', evt.error || evt);
+            toast('AI error: ' + (evt.error?.message || 'unknown'), 'error');
+            break;
+        case 'session.created':
+            console.log('Realtime session created:', evt.session?.id);
+            break;
+        case 'session.updated':
+            console.log('Session updated (turn steering applied)');
+            break;
+    }
+}
+
+// --- Microphone capture at 24 kHz (matches Realtime API format) ---
+async function rtStartMic() {
+    try {
+        rtMicStream = await navigator.mediaDevices.getUserMedia({
+            audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+            video: false,
+        });
+        rtAudioCtx  = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 24000 });
+        rtNextPlay  = rtAudioCtx.currentTime;
+        // Set up AnalyserNode for waveform visualisation (output side)
+        rtAnalyser = rtAudioCtx.createAnalyser();
+        rtAnalyser.fftSize = 256;
+        rtAnalyser.connect(rtAudioCtx.destination);
+        const src   = rtAudioCtx.createMediaStreamSource(rtMicStream);
+        // TODO: migrate to AudioWorkletNode — ScriptProcessorNode is deprecated
+        rtScriptProc = rtAudioCtx.createScriptProcessor(2048, 1, 1);
+        src.connect(rtScriptProc);
+        rtScriptProc.connect(rtAudioCtx.destination);
+        rtScriptProc.onaudioprocess = (e) => {
+            // Suppress mic while AI is speaking to prevent echo feedback loop
+            if (rtAiSpeaking || rtMuted || !rtWs || rtWs.readyState !== WebSocket.OPEN) return;
+            const i16 = rtF32toI16(e.inputBuffer.getChannelData(0));
+            rtWs.send(JSON.stringify({
+                type: 'input_audio_buffer.append',
+                audio: rtBufToB64(i16.buffer),
+            }));
+        };
+    } catch (err) {
+        console.warn('Mic unavailable:', err.message);
+        toast('No microphone — AI will speak but cannot hear you', 'info');
+    }
+}
+
+// --- Queue and play a base64-encoded PCM16 chunk ---
+function rtPlayChunk(b64) {
+    if (!rtAudioCtx) {
+        rtAudioCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 24000 });
+        rtNextPlay = rtAudioCtx.currentTime;
+    }
+    const f32 = rtI16toF32(rtB64toBuf(b64));
+    if (!f32.length) return;
+    const buf = rtAudioCtx.createBuffer(1, f32.length, 24000);
+    buf.copyToChannel(f32, 0);
+    const src = rtAudioCtx.createBufferSource();
+    src.buffer = buf;
+    // Route through AnalyserNode when available (drives waveform canvas)
+    src.connect(rtAnalyser || rtAudioCtx.destination);
+    const t = Math.max(rtAudioCtx.currentTime + 0.02, rtNextPlay);
+    src.start(t);
+    rtNextPlay = t + buf.duration;
+}
+
+// --- Mute / unmute ---
+function toggleMute() {
+    rtMuted = !rtMuted;
+    const btn = document.getElementById('callMuteBtn');
+    btn.textContent = rtMuted ? '\ud83d\udd07 Unmute' : '\ud83c\udfa4 Mute';
+    btn.classList.toggle('muted', rtMuted);
+    if (!rtMuted && rtWs && rtWs.readyState === WebSocket.OPEN) {
+        rtWs.send(JSON.stringify({ type: 'input_audio_buffer.clear' }));
+    }
+}
+
+// --- End an active call ---
+let rtUserHangup = false;  // true when user initiates end — suppresses close toast
+
+function endCall() {
+    rtUserHangup = true;
+    if (rtWs && rtWs.readyState === WebSocket.OPEN) rtWs.close(1000, 'user ended call');
+    rtCleanup();
+}
+
+// --- Release all call resources ---
+function rtCleanup() {
+    rtStopWaveform();
+    if (rtAnalyser)   { rtAnalyser.disconnect(); rtAnalyser = null; }
+    if (rtScriptProc) { rtScriptProc.disconnect(); rtScriptProc = null; }
+    if (rtMicStream)  { rtMicStream.getTracks().forEach(t => t.stop()); rtMicStream = null; }
+    if (rtAudioCtx)   { rtAudioCtx.close().catch(() => {}); rtAudioCtx = null; }
+    rtWs = null; rtMuted = false; rtNextPlay = 0; rtUserHangup = false; state.call = null;
+    rtHideBar();
+    if (state.persona) {
+        document.getElementById('headerScenarioDesc').textContent =
+            state.persona.scenario + ' \u00b7 Call ended — use Guest Search';
+    }
+}
+
+// --- Call bar helpers ---
+function rtShowBar(persona) {
+    // Fixed top-centre bar
+    document.getElementById('callBar').classList.add('visible');
+    document.getElementById('callPersonaName').textContent = persona.name.split(' ')[0];
+    // Call panel (right panel)
+    const cpanel = document.getElementById('callPanel');
+    cpanel.classList.add('active');
+    document.getElementById('cpPersonaName').textContent = persona.name;
+    document.getElementById('cpSpeakingStatus').textContent = 'Connecting…';
+    document.getElementById('cpSpeakingStatus').className = 'call-speaking-status';
+    // Shared timer — updates both top bar and call panel
+    rtCallStart = Date.now();
+    rtTimerRef  = setInterval(() => {
+        const s = Math.floor((Date.now() - rtCallStart) / 1000);
+        const fmt = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+        document.getElementById('callTimer').textContent   = fmt;
+        document.getElementById('cpTimer').textContent     = fmt;
+    }, 1000);
+}
+function rtHideBar() {
+    document.getElementById('callBar').classList.remove('visible');
+    document.getElementById('callPersonaName').textContent = '';
+    document.getElementById('callTimer').textContent = '0:00';
+    const muteBtn = document.getElementById('callMuteBtn');
+    muteBtn.textContent = '\ud83c\udfa4 Mute';
+    muteBtn.classList.remove('muted');
+    if (rtTimerRef) { clearInterval(rtTimerRef); rtTimerRef = null; }
+    // Hide call panel + reset its contents
+    const cpanel = document.getElementById('callPanel');
+    cpanel.classList.remove('active');
+    document.getElementById('cpPersonaName').textContent = '';
+    document.getElementById('cpTimer').textContent = '0:00';
+    document.getElementById('cpSpeakingStatus').textContent = 'Waiting for greeting…';
+    document.getElementById('cpSpeakingStatus').className = 'call-speaking-status';
+    document.getElementById('callTranscript').innerHTML =
+        '<div class="tx-placeholder" id="txPlaceholder">Transcript will appear here</div>';
+}
+
+// --- PCM16 / Float32 / Base64 utilities ---
+function rtF32toI16(f32) {
+    const i16 = new Int16Array(f32.length);
+    for (let i = 0; i < f32.length; i++) {
+        const s = Math.max(-1, Math.min(1, f32[i]));
+        i16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+    }
+    return i16;
+}
+function rtI16toF32(buf) {
+    const i16 = new Int16Array(buf), f32 = new Float32Array(i16.length);
+    for (let i = 0; i < i16.length; i++) f32[i] = i16[i] / 32768;
+    return f32;
+}
+function rtBufToB64(buf) {
+    return btoa(String.fromCharCode.apply(null, new Uint8Array(buf)));
+}
+function rtB64toBuf(b64) {
+    const s = atob(b64), b = new Uint8Array(s.length);
+    for (let i = 0; i < s.length; i++) b[i] = s.charCodeAt(i);
+    return b.buffer;
+}
+
+// --- Clear current guest (soft reset — stays in PMS, call unaffected) ---
+function clearGuest({ focusInput = true } = {}) {
+    state.guest = null;
+    state.bookings = [];
+    state.analysis = null;
+    _searchResultsCache = [];
+
+    // Hide guest card + results panel; clear + focus search input
+    document.getElementById('guestCard').classList.remove('visible');
+    const srPanel = document.getElementById('searchResults');
+    if (srPanel) { srPanel.classList.add('hidden'); srPanel.innerHTML = ''; }
+    const si = document.getElementById('searchInput');
+    si.value = '';
+    if (focusInput) si.focus();
+    const nsb = document.getElementById('newSearchBtn');
+    if (nsb) nsb.classList.remove('visible');
+
+    // Reset tab panes to placeholders
+    document.getElementById('resTable').style.display = 'none';
+    document.getElementById('resPlaceholder').style.display = 'flex';
+    document.getElementById('notesList').innerHTML = '';
+    document.getElementById('notesPlaceholder').style.display = 'flex';
+    document.getElementById('availTable').style.display = 'none';
+    document.getElementById('availPlaceholder').style.display = 'flex';
+
+    // Clear scenario strip
+    document.getElementById('headerScenario').classList.add('empty');
+
+    // Reset AI panel
+    const aiIntel = document.getElementById('aiIntelligence');
+    if (aiIntel) { aiIntel.className = 'ai-section-body'; aiIntel.textContent = 'Load a guest profile to see AI-generated pattern analysis'; }
+    const aiSent = document.getElementById('aiSentiment');
+    if (aiSent) { aiSent.className = 'ai-section-body'; aiSent.textContent = 'Survey analysis from Medallia data will appear here'; }
+    const aiAlerts = document.getElementById('aiAlerts');
+    if (aiAlerts) { aiAlerts.className = 'ai-section-body'; aiAlerts.textContent = 'Content-safety validated alerts and flags'; }
+    const aiRecOverlay = document.getElementById('aiRecommendationOverlay');
+    if (aiRecOverlay) aiRecOverlay.remove();
+    const siIntel = document.getElementById('aiSectionIntelligence');
+    if (siIntel) siIntel.classList.remove('collapsed');
+    const siSent = document.getElementById('aiSectionSentiment');
+    if (siSent) siSent.classList.add('collapsed');
+    const siAlerts = document.getElementById('aiSectionAlerts');
+    if (siAlerts) siAlerts.classList.add('collapsed');
+    _stepReset();
+    const timingBadge = document.getElementById('intelligenceTimingBadge');
+    if (timingBadge) timingBadge.style.display = 'none';
+    const recBtn = document.getElementById('recommendBtn');
+    if (recBtn) { recBtn.disabled = true; recBtn.textContent = '\u2728 View Recommendations'; recBtn.onclick = null; }
+    ['srcStays','srcSurveys','srcExperiences','srcRequests'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('connected');
+    });
+
+    switchTab('reservations');
+}
+
+// --- Reset to launcher ---
+function resetToLauncher() {
+    if (state.call?.active) endCall();  // hang up before returning to launcher
+    clearGuest();                       // wipe guest state + UI
+    state.persona = null;
+    state.queryLog = [];
+
+    // Hide PMS, show launcher
+    document.getElementById('pms').classList.remove('active');
+    document.getElementById('launcher').classList.remove('hidden');
+
+    switchToDashboard();
+    updateStatusBar();
+}
+
+// --- View switching ---
+function switchToGuestSearch() {
+    document.getElementById('dashboardView').classList.add('hidden');
+    document.getElementById('guestView').classList.remove('hidden');
+    document.querySelectorAll('.sidebar-item').forEach(i => {
+        i.classList.toggle('active', i.dataset.view === 'search');
+    });
+    document.getElementById('searchInput').focus();
+}
+
+function switchToDashboard() {
+    document.getElementById('guestView').classList.add('hidden');
+    document.getElementById('dashboardView').classList.remove('hidden');
+    document.querySelectorAll('.sidebar-item').forEach(i => {
+        i.classList.toggle('active', i.dataset.view === 'dashboard');
+    });
+}
+
+// --- Persona selection ---
+function browseApp() {
+    document.getElementById('launcher').classList.add('hidden');
+    document.getElementById('pms').classList.add('active');
+    switchToDashboard();
+    updateStatusBar();
+}
+
+function selectPersona(id) {
+    const p = PERSONAS[id];
+    if (!p) return;
+    state.persona = p;
+
+    // Transition: hide launcher, show PMS on dashboard
+    document.getElementById('launcher').classList.add('hidden');
+    document.getElementById('pms').classList.add('active');
+
+    // Show dashboard, update header scenario strip
+    switchToDashboard();
+    const hs = document.getElementById('headerScenario');
+    hs.classList.remove('empty');
+    document.getElementById('headerScenarioName').textContent = p.name + ' — ' + p.tier;
+    document.getElementById('headerScenarioDesc').textContent = p.scenario + ' · Incoming call...';
+
+    updateStatusBar();
+
+    // Show ACD card first — agent must answer/decline before call connects
+    showAcdCard(p);
+}
+
+async function loadGuestProfile(persona) {
+    try {
+        // Profile query
+        const profileData = await apiQuery(persona.profileQuery);
+        if (profileData.results.length > 0) {
+            state.guest = profileData.results[0];
+            renderGuestCard(state.guest);
+        }
+
+        // Bookings query
+        const bookingsData = await apiQuery(persona.bookingsQuery);
+        state.bookings = bookingsData.results;
+        renderBookings(state.bookings);
+        renderNotes(state.guest, state.bookings);
+
+        toast('Guest profile loaded — ' + persona.name, 'success');
+    } catch (err) {
+        console.error('Profile load error:', err);
+        toast('Error loading profile: ' + err.message, 'error');
+    }
+}
+
+// --- Render guest card ---
+function renderGuestCard(g) {
+    const card = document.getElementById('guestCard');
+    card.classList.add('visible');
+
+    // Show 'New Search' button in search bar
+    const nsb = document.getElementById('newSearchBtn');
+    if (nsb) nsb.classList.add('visible');
+
+    const initials = (g.FirstName || '?')[0] + (g.LastName || '?')[0];
+    document.getElementById('guestAvatar').textContent = initials;
+    document.getElementById('guestName').textContent = (g.FirstName || '') + ' ' + (g.LastName || '');
+    document.getElementById('guestIdLabel').textContent = g.GuestID || '';
+
+    const tier = (g.LoyaltyTier || 'member').toLowerCase();
+    const badge = document.getElementById('guestLoyaltyBadge');
+    badge.textContent = g.LoyaltyTier || '';
+    badge.className = 'loyalty-badge ' + tier;
+
+    // Parse preferences
+    let prefs = '';
+    if (g.Preferences) {
+        try {
+            const p = typeof g.Preferences === 'string' ? JSON.parse(g.Preferences) : g.Preferences;
+            prefs = Object.entries(p).map(([k,v]) => k.replace(/_/g,' ') + ': ' + v).join(', ');
+        } catch { prefs = g.Preferences; }
+    }
+
+    const fields = [
+        { label: 'Email', value: g.Email },
+        { label: 'Phone', value: g.Phone },
+        { label: 'Home City', value: g.HomeCity },
+        { label: 'Country', value: g.Country },
+        { label: 'Loyalty Points', value: g.LoyaltyPoints ? Number(g.LoyaltyPoints).toLocaleString() : '—' },
+        { label: 'Member Since', value: g.MemberSince },
+        { label: 'Preferences', value: prefs || '—' },
+    ];
+
+    const container = document.getElementById('guestFields');
+    container.innerHTML = fields.map(f =>
+        '<div class="guest-field"><label>' + esc(f.label) + '</label><span>' + esc(f.value || '—') + '</span></div>'
+    ).join('');
+
+}
+
+// --- AI Panel render functions ---
+
+function renderIntelligence(intelligence) {
+    const el = document.getElementById('aiIntelligence');
+    if (!intelligence) {
+        el.className = 'ai-section-body';
+        el.textContent = 'No intelligence data available.';
+        return;
+    }
+    el.className = 'ai-section-body populated';
+    let html = '';
+
+    // Proactive flags section — Epic 4.1 (shown first for maximum agent impact)
+    const flags = intelligence.proactive_flags || [];
+    if (flags.length) {
+        html += '<div class="proactive-flags">' +
+            '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#c2410c;margin-bottom:4px">&#9888;&#65039; Proactive Flags (' + flags.length + ')</div>' +
+            flags.map(flag => {
+                const sev = (flag.severity || 'info').toLowerCase();
+                const sevLabel = sev.charAt(0).toUpperCase() + sev.slice(1);
+                const dept = flag.department ? flag.department + '\u00a0\u00b7\u00a0' : '';
+                const props = (flag.properties || []).join(', ');
+                return '<div class="proactive-flag-card ' + esc(sev) + '">' +
+                    '<div class="proactive-flag-label">' +
+                        (sev === 'critical' ? '&#128308;' : sev === 'warning' ? '&#128992;' : '&#128309;') +
+                        ' ' + sevLabel + '\u00a0\u2014\u00a0' + esc(dept) + (flag.occurrences > 0 ? flag.occurrences + ' occurrence(s)' : '') +
+                    '</div>' +
+                    '<div class="proactive-flag-detail">' + esc(flag.message || '') + '</div>' +
+                    (props ? '<div class="proactive-flag-meta">' + esc(props) + '</div>' : '') +
+                '</div>';
+            }).join('') +
+        '</div>';
+    }
+
+    if (intelligence.briefing) {
+        html += '<div class="intel-briefing">' +
+            '<div class="intel-briefing-label">&#128200; Agent Briefing</div>' +
+            esc(intelligence.briefing) +
+        '</div>';
+    }
+    const insights = intelligence.insights || [];
+    if (insights.length) {
+        html += '<div class="insight-cards">' +
+            insights.map(ins => {
+                const type = (ins.type || 'likes').toLowerCase().replace(/\s+/g,'_');
+                const typeLabel = type.replace(/_/g,' ');
+                return '<div class="insight-card ' + esc(type) + '">' +
+                    '<div class="insight-card-header">' +
+                        '<span class="insight-title">' + esc(ins.title || '') + '</span>' +
+                        '<span class="insight-type-badge ' + esc(type) + '">' + esc(typeLabel) + '</span>' +
+                    '</div>' +
+                    '<div class="insight-detail">' + esc(ins.detail || '') + '</div>' +
+                    (ins.sources && ins.sources.length ?
+                        '<div class="insight-sources">' +
+                            ins.sources.map(s => '<span class="insight-source-chip">' + esc(s) + '</span>').join('') +
+                        '</div>' : '') +
+                '</div>';
+            }).join('') +
+        '</div>';
+    } else {
+        html += '<div style="font-size:12px;color:var(--text-muted);text-align:center;padding:8px 0">No patterns identified for this guest.</div>';
+    }
+    el.innerHTML = html;
+}
+
+function renderRecommendations(validation) {
+    // Recommendations are rendered into a collapsible overlay appended to aiIntelligence
+    // Find or create the recs section
+    let recsSection = document.getElementById('aiRecommendationOverlay');
+    if (!recsSection) {
+        recsSection = document.createElement('div');
+        recsSection.id = 'aiRecommendationOverlay';
+        recsSection.style.cssText = 'margin-top:12px;';
+        const parent = document.getElementById('aiIntelligence');
+        if (parent) parent.appendChild(recsSection);
+    }
+    const recs = validation && validation.filtered_recommendations;
+    if (!recs || !recs.length) {
+        recsSection.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:4px 0">No recommendations available for this guest.</div>';
+        return;
+    }
+    recsSection.innerHTML =
+        '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-secondary);margin-bottom:8px">&#127775; Recommendations</div>' +
+        recs.map(rec => {
+            const exps = (rec.experiences || []).map(e =>
+                '<span class="rec-exp-chip">' + esc(e.name) +
+                (e.price ? ' &middot; $' + Number(e.price).toLocaleString() : '') +
+                '</span>'
+            ).join('');
+            return '<div class="rec-card">' +
+                '<span class="rec-scenario-badge">' + esc((rec.scenario || 'new_trip').replace(/_/g, ' ')) + '</span>' +
+                '<div class="rec-headline">' + esc(rec.property_name || '') + '</div>' +
+                '<div class="rec-narrative">' + esc(rec.narrative || '') + '</div>' +
+                (exps ? '<div class="rec-experiences">' + exps + '</div>' : '') +
+            '</div>';
+        }).join('');
+    // Expand Intelligence section so recs are visible
+    document.getElementById('aiSectionIntelligence').classList.remove('collapsed');
+}
+
+function renderSentiment(sentiment) {
+    const el = document.getElementById('aiSentiment');
+    if (!sentiment || !sentiment.properties || !sentiment.properties.length) {
+        el.className = 'ai-section-body';
+        el.textContent = 'No sentiment data available.';
+        return;
+    }
+    el.className = 'ai-section-body populated';
+    const overallPrefs = sentiment.overall_preferences || [];
+    let html = '';
+    if (overallPrefs.length) {
+        html += '<div style="margin-bottom:10px;font-size:12px;color:var(--text-secondary)">' +
+            '<strong style="color:var(--navy)">Preferences: </strong>' +
+            overallPrefs.map(p => esc(p)).join(' &middot; ') + '</div>';
+    }
+    // Category labels for display (Task 3.3.6)
+    const CAT_LABELS = {
+        avg_service:     'Service',
+        avg_cleanliness: 'Cleanliness',
+        avg_food:        'Food & Bev',
+        avg_spa:         'Spa',
+        avg_activities:  'Activities',
+    };
+    html += sentiment.properties.map((p, i) => {
+        const score = Number(p.avg_overall || 0).toFixed(1);
+        const scoreClass = p.avg_overall >= 8 ? 'sent-score-high' : p.avg_overall >= 6 ? 'sent-score-mid' : 'sent-score-low';
+        const posThemes = (p.positive_themes || []).map(t => '<span class="sent-theme-pos">' + esc(t) + '</span>').join('');
+        const negThemes = (p.negative_themes || []).map(t => '<span class="sent-theme-neg">' + esc(t) + '</span>').join('');
+        // Per-category breakdown
+        const catEntries = Object.entries(CAT_LABELS)
+            .filter(([key]) => p[key] != null && Number(p[key]) > 0)
+            .map(([key, label]) => {
+                const val = Number(p[key]);
+                const pct = Math.round((val / 10) * 100);
+                const fillClass = val >= 8 ? 'high' : val >= 6 ? 'mid' : 'low';
+                return '<div class="sent-cat-item">' +
+                    '<span class="sent-cat-label">' + esc(label) + '</span>' +
+                    '<div class="sent-cat-bar-wrap">' +
+                        '<div class="sent-cat-bar-bg">' +
+                            '<div class="sent-cat-bar-fill ' + fillClass + '" style="width:' + pct + '%"></div>' +
+                        '</div>' +
+                        '<span class="sent-cat-score">' + val.toFixed(1) + '</span>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+        return (i > 0 ? '<hr class="sent-sep">' : '') +
+            '<div class="sent-property">' +
+                '<div class="sent-prop-header">' +
+                    '<span class="sent-prop-name">' + esc(p.property_name || p.property_id) + '</span>' +
+                    '<span class="sent-score-badge ' + scoreClass + '">' + score + '</span>' +
+                '</div>' +
+                (posThemes ? '<div class="sent-themes">' + posThemes + '</div>' : '') +
+                (negThemes ? '<div class="sent-themes">' + negThemes + '</div>' : '') +
+                (catEntries ? '<div class="sent-cat-grid" style="margin-top:8px">' + catEntries + '</div>' : '') +
+            '</div>';
+    }).join('');
+    el.innerHTML = html;
+}
+
+function renderValidation(validation) {
+    const el = document.getElementById('aiAlerts');
+    if (!validation) {
+        el.className = 'ai-section-body';
+        el.textContent = 'No validation data available.';
+        return;
+    }
+    el.className = 'ai-section-body populated';
+    const safetyPassed = validation.content_safety_passed !== false;
+    const flags = validation.flags || [];
+    let html = '<div class="val-safety-badge ' + (safetyPassed ? 'val-safety-pass' : 'val-safety-fail') + '">' +
+        (safetyPassed ? '&#10003; Content Safety Passed' : '&#10007; Content Safety Flagged') + '</div>';
+    if (!flags.length) {
+        html += '<div class="val-all-clear">&#10003; All quality checks passed</div>';
+    } else {
+        html += flags.map(f => {
+            const sev = (f.severity || 'info').toLowerCase();
+            const icon = sev === 'blocked' ? '&#128683;' : sev === 'warning' ? '&#9888;&#65039;' : '&#8505;&#65039;';
+            return '<div class="val-flag ' + esc(sev) + '">' +
+                '<span class="val-flag-icon">' + icon + '</span>' +
+                '<span class="val-flag-msg">' + esc(f.message || '') + '</span>' +
+            '</div>';
+        }).join('');
+    }
+    el.innerHTML = html;
+}
+
+function toggleAiSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) section.classList.toggle('collapsed');
+}
+
+// --- Render bookings table ---
+function renderBookings(bookings) {
+    const table = document.getElementById('resTable');
+    const body = document.getElementById('resBody');
+    const placeholder = document.getElementById('resPlaceholder');
+
+    if (!bookings.length) {
+        table.style.display = 'none';
+        placeholder.style.display = 'flex';
+        return;
+    }
+    placeholder.style.display = 'none';
+    table.style.display = '';
+
+    body.innerHTML = bookings.map(b => {
+        const status = (b.Status || '').toLowerCase();
+        const statusClass = status === 'completed' ? 'status-completed' :
+                            status === 'upcoming'  ? 'status-upcoming' : 'status-cancelled';
+        return '<tr>' +
+            '<td>' + esc(b.BookingID || '') + '</td>' +
+            '<td>' + esc(b.PropertyName || b.Name || '') + '</td>' +
+            '<td>' + formatDate(b.CheckIn) + '</td>' +
+            '<td>' + formatDate(b.CheckOut) + '</td>' +
+            '<td>' + esc(b.RoomType || '') + '</td>' +
+            '<td>' + formatCurrency(b.RatePerNight) + '</td>' +
+            '<td>' + formatCurrency(b.TotalAmount) + '</td>' +
+            '<td><span class="status-badge ' + statusClass + '">' + esc(b.Status || '') + '</span></td>' +
+        '</tr>';
+    }).join('');
+}
+
+// --- Render notes ---
+function renderNotes(guest, bookings) {
+    const list = document.getElementById('notesList');
+    const placeholder = document.getElementById('notesPlaceholder');
+    const notes = [];
+
+    // From guest preferences
+    if (guest && guest.Preferences) {
+        try {
+            const p = typeof guest.Preferences === 'string' ? JSON.parse(guest.Preferences) : guest.Preferences;
+            Object.entries(p).forEach(([k, v]) => {
+                notes.push({ label: k.replace(/_/g, ' '), text: String(v), source: 'Guest Profile' });
+            });
+        } catch { /* skip */ }
+    }
+
+    // From booking special requests
+    if (bookings) {
+        bookings.forEach(b => {
+            if (b.SpecialRequests) {
+                notes.push({
+                    label: 'Special Request — ' + formatDate(b.CheckIn),
+                    text: b.SpecialRequests,
+                    source: (b.PropertyName || b.Name || 'Reservation'),
+                });
+            }
+        });
+    }
+
+    if (!notes.length) {
+        placeholder.style.display = 'flex';
+        list.innerHTML = '';
+        return;
+    }
+    placeholder.style.display = 'none';
+    list.innerHTML = notes.map(n =>
+        '<div class="note-card">' +
+            '<div class="note-card-label">' + esc(n.label) +
+                '<span class="note-card-source">' + esc(n.source) + '</span>' +
+            '</div>' +
+            '<div class="note-card-text">' + esc(n.text) + '</div>' +
+        '</div>'
+    ).join('');
+}
+
+// --- Availability ---
+async function loadAvailability() {
+    const from = document.getElementById('availFrom').value;
+    const to = document.getElementById('availTo').value;
+    if (!from || !to) {
+        toast('Please select both start and end dates', 'error');
+        return;
+    }
+
+    try {
+        const question = "Show room availability at all properties between " + from + " and " + to +
+            " where Available is 0 or greater, including PropertyID, the property Name, Date, RoomType, TotalRooms, BookedRooms, Available ordered by property Name, Date, RoomType";
+        const data = await apiQuery(question);
+        renderAvailability(data.results);
+    } catch (err) {
+        console.error('Availability error:', err);
+        toast('Error loading availability: ' + err.message, 'error');
+    }
+}
+
+function renderAvailability(rows) {
+    const table = document.getElementById('availTable');
+    const body = document.getElementById('availBody');
+    const placeholder = document.getElementById('availPlaceholder');
+
+    if (!rows.length) {
+        table.style.display = 'none';
+        placeholder.style.display = 'flex';
+        placeholder.querySelector('.icon').textContent = '📭';
+        placeholder.childNodes[2].textContent = 'No availability data for the selected dates';
+        return;
+    }
+    placeholder.style.display = 'none';
+    table.style.display = '';
+
+    body.innerHTML = rows.map(r => {
+        const avail = Number(r.Available || 0);
+        const availClass = avail === 0 ? 'avail-sold-out' : avail <= 3 ? 'avail-low' : 'avail-ok';
+        return '<tr>' +
+            '<td>' + esc(r.Name || r.PropertyName || '') + '</td>' +
+            '<td>' + formatDate(r.Date) + '</td>' +
+            '<td>' + esc(r.RoomType || '') + '</td>' +
+            '<td>' + (r.TotalRooms || '') + '</td>' +
+            '<td>' + (r.BookedRooms || '') + '</td>' +
+            '<td class="' + availClass + '">' + (avail === 0 ? 'SOLD OUT' : avail) + '</td>' +
+        '</tr>';
+    }).join('');
+}
+
+// --- Search ---
+async function doSearch() {
+    const input = document.getElementById('searchInput');
+    const question = input.value.trim();
+    if (!question) return;
+
+    const btn = document.querySelector('.search-btn');
+    if (btn) btn.disabled = true;
+    try {
+        const data = await apiQuery(question);
+        // Intelligent routing: detect what the results contain
+        if (data.results.length > 0) {
+            const cols = Object.keys(data.results[0]);
+            const colSet = cols.map(c => c.toLowerCase());
+
+            if (colSet.includes('loyaltytier') && colSet.includes('guestid')) {
+                // Guest profile result — show selectable list; agent clicks a row to load
+                showSearchResults(data.results);
+                toast(data.results.length + ' guest(s) found — select a row to load profile', 'success');
+            } else if (colSet.includes('bookingid') || colSet.includes('checkin')) {
+                // Booking results
+                state.bookings = data.results;
+                renderBookings(data.results);
+                switchTab('reservations');
+                if (state.guest) renderNotes(state.guest, state.bookings);
+                toast(data.row_count + ' reservations returned', 'success');
+            } else if (colSet.includes('available') && colSet.includes('roomtype') && colSet.includes('date')) {
+                // Availability results
+                renderAvailability(data.results);
+                switchTab('availability');
+                toast(data.row_count + ' availability rows returned', 'success');
+            } else {
+                // Generic results — show as reservations tab table
+                renderGenericResults(data.results);
+                toast(data.row_count + ' rows returned', 'info');
+            }
+        } else {
+            toast('No results found', 'info');
+        }
+    } catch (err) {
+        console.error('Search error:', err);
+        toast('Search error: ' + err.message, 'error');
+    } finally {
+        if (btn) btn.disabled = false;
+    }
+}
+
+// --- Search results list ---
+// Temp store for search results so rows can reference by index (avoids JSON-in-attribute issues)
+let _searchResultsCache = [];
+
+function showSearchResults(results) {
+    const panel = document.getElementById('searchResults');
+    if (!results.length) { panel.classList.add('hidden'); return; }
+    _searchResultsCache = results;
+    const cols = ['GuestID', 'FirstName', 'LastName', 'LoyaltyTier', 'LoyaltyPoints', 'HomeCity'];
+    const available = cols.filter(c => Object.prototype.hasOwnProperty.call(results[0], c));
+    panel.innerHTML =
+        '<table class="search-results-table">' +
+        '<thead><tr>' + available.map(c => '<th>' + esc(c) + '</th>').join('') + '</tr></thead>' +
+        '<tbody>' +
+        results.map((r, i) =>
+            '<tr onclick="selectGuestFromSearch(' + i + ')">' +
+            available.map(c => '<td>' + esc(String(r[c] ?? '')) + '</td>').join('') +
+            '</tr>'
+        ).join('') +
+        '</tbody></table>';
+    panel.classList.remove('hidden');
+}
+
+async function selectGuestFromSearch(idx) {
+    const g = _searchResultsCache[idx];
+    if (!g) return;
+
+    // Wipe any previously loaded guest before loading the new one
+    clearGuest({ focusInput: false });
+
+    // Hide results panel (clearGuest already did this, but be explicit)
+    const panel = document.getElementById('searchResults');
+    if (panel) { panel.classList.add('hidden'); panel.innerHTML = ''; }
+
+    // Update state and render guest card
+    state.guest = g;
+    renderGuestCard(g);
+
+    // Restore scenario strip with guest name (clearGuest wiped it)
+    const hs = document.getElementById('headerScenario');
+    if (hs) {
+        hs.classList.remove('empty');
+        const fullName = ((g.FirstName || '') + ' ' + (g.LastName || '')).trim();
+        const nameEl = document.getElementById('headerScenarioName');
+        const descEl = document.getElementById('headerScenarioDesc');
+        if (nameEl) nameEl.textContent = fullName + (g.LoyaltyTier ? ' \u2014 ' + g.LoyaltyTier : '');
+        if (descEl) descEl.textContent = g.GuestID || '';
+    }
+
+    // Set AI Intelligence to analyzing state
+    const aiIntel = document.getElementById('aiIntelligence');
+    if (aiIntel) { aiIntel.className = 'ai-section-body'; aiIntel.textContent = 'Analyzing guest patterns\u2026'; }
+
+    // Load bookings by guest name
+    try {
+        const fullName = ((g.FirstName || '') + ' ' + (g.LastName || '')).trim();
+        const bookingsQ = 'Show all reservations for ' + fullName + ' with BookingID, the property Name as PropertyName, CheckIn, CheckOut, RoomType, RatePerNight, TotalAmount, Status, SpecialRequests ordered by CheckIn descending';
+        const bData = await apiQuery(bookingsQ);
+        state.bookings = bData.results;
+        renderBookings(bData.results);
+        renderNotes(g, bData.results);
+        switchTab('reservations');
+    } catch (err) {
+        console.warn('Bookings load error:', err.message);
+    }
+
+    // Trigger intelligence stream — the a-ha moment
+    apiAnalyzeStream(g.GuestID);
+}
+
+function renderGenericResults(rows) {
+    if (!rows.length) return;
+    const cols = Object.keys(rows[0]);
+    const table = document.getElementById('resTable');
+    const placeholder = document.getElementById('resPlaceholder');
+    placeholder.style.display = 'none';
+    table.style.display = '';
+
+    table.querySelector('thead').innerHTML = '<tr>' +
+        cols.map(c => '<th>' + esc(c) + '</th>').join('') + '</tr>';
+    document.getElementById('resBody').innerHTML = rows.map(r =>
+        '<tr>' + cols.map(c => '<td>' + esc(String(r[c] ?? '')) + '</td>').join('') + '</tr>'
+    ).join('');
+    switchTab('reservations');
+}
+
+// --- Tab switching ---
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        const active = btn.dataset.tab === tabName;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    document.querySelectorAll('.tab-pane').forEach(pane => {
+        pane.classList.toggle('active', pane.id === 'tab-' + tabName);
+    });
+}
+
+// --- SQL popup ---
+function showSqlPopup(question, sql) {
+    document.getElementById('sqlPopupQuestion').textContent = question;
+    document.getElementById('sqlPopupCode').innerHTML = highlightSQL(sql);
+    document.getElementById('sqlPopup').classList.add('visible');
+}
+
+function closeSqlPopup() {
+    document.getElementById('sqlPopup').classList.remove('visible');
+}
+
+function highlightSQL(sql) {
+    // Simple keyword highlighting
+    const keywords = /\b(SELECT|FROM|WHERE|JOIN|LEFT|RIGHT|INNER|OUTER|ON|AND|OR|NOT|IN|AS|ORDER|BY|GROUP|HAVING|TOP|DISTINCT|BETWEEN|LIKE|IS|NULL|DESC|ASC|COUNT|AVG|SUM|MAX|MIN|COALESCE|CASE|WHEN|THEN|ELSE|END|INSERT|UPDATE|DELETE|GETDATE|DATEADD|CAST|CONVERT)\b/gi;
+    const strings = /('[^']*')/g;
+    const numbers = /\b(\d+\.?\d*)\b/g;
+
+    let result = esc(sql);
+    result = result.replace(strings, '<span class="sql-str">$1</span>');
+    result = result.replace(keywords, '<span class="sql-kw">$1</span>');
+    result = result.replace(numbers, '<span class="sql-num">$1</span>');
+    return result;
+}
+
+// --- Sidebar navigation ---
+document.querySelectorAll('.sidebar-item').forEach(item => {
+    item.addEventListener('click', () => {
+        const view = item.dataset.view;
+        if (view === 'search') {
+            switchToGuestSearch();
+        } else if (view === 'dashboard') {
+            switchToDashboard();
+        } else {
+            toast(item.title + ' — available in a future phase', 'info');
+        }
+    });
+});
+
+// --- Tab click handlers ---
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+// --- Close SQL popup on overlay click ---
+document.getElementById('sqlPopup').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeSqlPopup();
+});
+
+// --- Utility functions ---
+const _escEl = document.createElement('div');
+function esc(str) {
+    _escEl.textContent = str;
+    return _escEl.innerHTML;
+}
+
+function formatDate(d) {
+    if (!d) return '—';
+    try {
+        const dt = new Date(d + (d.length === 10 ? 'T00:00:00' : ''));
+        return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    } catch { return d; }
+}
+
+function formatCurrency(v) {
+    if (v == null) return '—';
+    return '$' + Number(v).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// --- Set default availability dates ---
+function initAvailDates() {
+    const today = new Date();
+    const d1 = today.toISOString().split('T')[0];
+    const d2 = new Date(today.getTime() + 7 * 86400000).toISOString().split('T')[0];
+    document.getElementById('availFrom').value = d1;
+    document.getElementById('availTo').value = d2;
+}
+
+// --- Startup ---
+(function init() {
+    initAvailDates();
+    apiHealth();
+    setInterval(apiHealth, 30000);
+
+    // Enter key submits search (avoids conflict with ACD ring handler)
+    document.getElementById('searchInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter') doSearch();
+    });
+
+    // Escape key closes SQL popup
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && document.getElementById('sqlPopup').classList.contains('visible')) {
+            closeSqlPopup();
+        }
+    });
+})();
+
+</script>
+</body>
+</html>

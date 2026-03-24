@@ -1,0 +1,4 @@
+BookingID,GuestID,PropertyID,CheckIn,CheckOut,RoomType,RoomNumber,RatePerNight,TotalAmount,Status,SpecialRequests,BookedDate
+BK-0003001,G-0003001,P-004,2023-09-14,2023-09-17,Deluxe,804,319.00,957.00,Completed,,2023-08-20
+BK-0003002,G-0003001,P-003,2024-10-25,2024-10-29,Standard,204,219.00,876.00,Completed,,2024-10-01
+BK-0003003,G-0003001,P-004,2026-03-28,2026-04-01,Standard,412,289.00,1156.00,Upcoming,,2026-02-14

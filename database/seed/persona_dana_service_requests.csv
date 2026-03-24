@@ -1,0 +1,3 @@
+RequestID,GuestID,BookingID,PropertyID,RequestedDate,Department,Category,Description,Priority,Status,AssignedTo,CompletedDate,ResponseMinutes,ResolutionNotes,GuestSatisfied
+SR-0001001,G-0001001,BK-0001005,P-001,2023-07-02T14:30:00,Engineering,Spa Equipment,"Hydro pool jets not functioning in suite spa tub; requested maintenance.",Medium,Completed,Engineering,2023-07-02T15:20:00,50,Jets serviced and confirmed working.,1
+SR-0001002,G-0001001,BK-0001008,P-001,2025-01-11T23:00:00,Front Desk,Room Temperature,"Room thermostat set to 68F but temperature feels warmer; requested maintenance check.",Low,Completed,Front Desk,2025-01-11T23:35:00,35,Thermostat recalibrated.,1

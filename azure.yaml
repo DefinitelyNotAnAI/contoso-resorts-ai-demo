@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+name: contoso-resorts-ai
+metadata:
+  template: contoso-resorts-ai@0.1.0
+services:
+  backend:
+    project: ./backend
+    host: appservice
+    language: python
+hooks:
+  preprovision:
+    windows:
+      shell: pwsh
+      run: ./hooks/preprovision.ps1
+      interactive: true
+      continueOnError: false
+    posix:
+      shell: sh
+      run: echo "Preprovision not implemented for posix — use PowerShell"
+  postprovision:
+    windows:
+      shell: pwsh
+      run: ./hooks/postprovision.ps1
+      interactive: true
+      continueOnError: false
+    posix:
+      shell: sh
+      run: echo "Postprovision not implemented for posix — use PowerShell"

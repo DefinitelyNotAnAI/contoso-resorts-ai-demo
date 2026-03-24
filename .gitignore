@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environment
+.venv/
+venv/
+ENV/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# App Service and deployment log downloads (debug artifacts)
+appservice-logs.zip
+appservice-logs/
+app-logs.zip
+app-logs/
+
+# Build archives
+backend.zip
+
+# Runtime logs
+server.log
+srv.log
+server_out.log
+srv_out.log
+
+# Data generation output
+data/*.csv
+data/*.json
+!data/.gitkeep
+
+# Node (if any)
+node_modules/
+
+# Azure Developer CLI
+.azure/

@@ -1,0 +1,3 @@
+RequestID,GuestID,BookingID,PropertyID,RequestedDate,Department,Category,Description,Priority,Status,AssignedTo,CompletedDate,ResponseMinutes,ResolutionNotes,GuestSatisfied
+SR-0003001,G-0003001,BK-0003001,P-004,2023-09-15T16:20:00,Front Desk,Room Change,"Requested room change — noise from adjacent room affecting stay.",Medium,Completed,Front Desk,2023-09-15T17:00:00,40,Moved to room 812.,1
+SR-0003002,G-0003001,BK-0003002,P-003,2024-10-26T14:05:00,Engineering,AC Issue,"AC unit not cooling below 74F despite thermostat set to 68F.",High,Completed,Engineering,2024-10-26T15:30:00,85,Unit serviced — refrigerant topped up and filters replaced.,

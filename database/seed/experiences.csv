@@ -1,0 +1,201 @@
+ExperienceID,PropertyID,Name,Category,Description,Price,Duration,Available
+EXP-P001-SPA-001,P-001,Alpine Signature Spa Package,Spa,Alpine Signature Spa Package — a curated spa offering at Contoso Park City.,219.33,90 min,1
+EXP-P-001-SPA-002,P-001,Alpine Deep Tissue Therapy,Spa,Alpine Deep Tissue Therapy — a curated spa offering at Contoso Park City.,334.97,120 min,1
+EXP-P-001-SPA-003,P-001,Alpine Aromatherapy Facial,Spa,Alpine Aromatherapy Facial — a curated spa offering at Contoso Park City.,91.55,60 min,1
+EXP-P-001-SPA-004,P-001,Alpine Couples Retreat Package,Spa,Alpine Couples Retreat Package — a curated spa offering at Contoso Park City.,238.69,120 min,1
+EXP-P-001-SPA-005,P-001,Alpine Hot Stone Treatment,Spa,Alpine Hot Stone Treatment — a curated spa offering at Contoso Park City.,219.48,120 min,1
+EXP-P-001-SPA-006,P-001,Alpine Hydrating Body Wrap,Spa,Alpine Hydrating Body Wrap — a curated spa offering at Contoso Park City.,185.76,90 min,1
+EXP-P-001-SPA-007,P-001,Alpine Express 30-Min Facial,Spa,Alpine Express 30-Min Facial — a curated spa offering at Contoso Park City.,281.54,60 min,1
+EXP-P-001-SPA-008,P-001,Alpine Full Wellness Journey,Spa,Alpine Full Wellness Journey — a curated spa offering at Contoso Park City.,308.36,90 min,1
+EXP-P-001-DIN-001,P-001,Alpine Chef's Tasting Menu,Dining,Alpine Chef's Tasting Menu — a curated dining offering at Contoso Park City.,343.57,3 hours,1
+EXP-P-001-DIN-002,P-001,Alpine Wine & Pairing Dinner,Dining,Alpine Wine & Pairing Dinner — a curated dining offering at Contoso Park City.,295.02,3 hours,1
+EXP-P-001-DIN-003,P-001,Alpine Sunset Terrace Dining,Dining,Alpine Sunset Terrace Dining — a curated dining offering at Contoso Park City.,341.36,2 hours,1
+EXP-P-001-DIN-004,P-001,Alpine Private Dining Experience,Dining,Alpine Private Dining Experience — a curated dining offering at Contoso Park City.,91.06,3 hours,1
+EXP-P-001-DIN-005,P-001,Alpine Sunday Brunch Buffet,Dining,Alpine Sunday Brunch Buffet — a curated dining offering at Contoso Park City.,115.9,2 hours,1
+EXP-P-001-DIN-006,P-001,Alpine Cocktail & Tapas Hour,Dining,Alpine Cocktail & Tapas Hour — a curated dining offering at Contoso Park City.,365.99,2 hours,1
+EXP-P-001-DIN-007,P-001,Alpine Seasonal Farm Dinner,Dining,Alpine Seasonal Farm Dinner — a curated dining offering at Contoso Park City.,78.0,2 hours,1
+EXP-P-001-DIN-008,P-001,Alpine In-Room Romance Package,Dining,Alpine In-Room Romance Package — a curated dining offering at Contoso Park City.,405.01,2 hours,1
+EXP-P-001-ACT-001,P-001,Alpine Adventure Package,Activity,Alpine Adventure Package — a curated activity offering at Contoso Park City.,154.76,Half day,1
+EXP-P-001-ACT-002,P-001,Alpine Nature Walk & Tour,Activity,Alpine Nature Walk & Tour — a curated activity offering at Contoso Park City.,162.1,3 hours,1
+EXP-P-001-ACT-003,P-001,Alpine Photography Experience,Activity,Alpine Photography Experience — a curated activity offering at Contoso Park City.,187.38,Full day,1
+EXP-P-001-ACT-004,P-001,Alpine Guided Excursion,Activity,Alpine Guided Excursion — a curated activity offering at Contoso Park City.,81.08,3 hours,1
+EXP-P-001-ACT-005,P-001,Alpine Outdoor Fitness Session,Activity,Alpine Outdoor Fitness Session — a curated activity offering at Contoso Park City.,169.25,3 hours,1
+EXP-P-001-ACT-006,P-001,Alpine Local Cultural Tour,Activity,Alpine Local Cultural Tour — a curated activity offering at Contoso Park City.,264.84,Full day,1
+EXP-P-001-ACT-007,P-001,Alpine Evening Stargazing,Activity,Alpine Evening Stargazing — a curated activity offering at Contoso Park City.,62.44,2 hours,1
+EXP-P-001-ACT-008,P-001,Alpine Half-Day Exploration,Activity,Alpine Half-Day Exploration — a curated activity offering at Contoso Park City.,58.79,Full day,1
+EXP-P-001-KID-001,P-001,Alpine Kids Club Day Pass,Kids,Alpine Kids Club Day Pass — a curated kids offering at Contoso Park City.,100.93,2 hours,1
+EXP-P-001-KID-002,P-001,Alpine Junior Chef Workshop,Kids,Alpine Junior Chef Workshop — a curated kids offering at Contoso Park City.,37.32,All day,1
+EXP-P-001-KID-003,P-001,Alpine Kids Movie Night,Kids,Alpine Kids Movie Night — a curated kids offering at Contoso Park City.,42.24,60 min,1
+EXP-P-001-KID-004,P-001,Alpine Treasure Hunt Adventure,Kids,Alpine Treasure Hunt Adventure — a curated kids offering at Contoso Park City.,65.69,90 min,1
+EXP-P-001-KID-005,P-001,Alpine Arts & Crafts Studio,Kids,Alpine Arts & Crafts Studio — a curated kids offering at Contoso Park City.,53.74,90 min,1
+EXP-P-001-KID-006,P-001,Alpine Mini Spa for Kids,Kids,Alpine Mini Spa for Kids — a curated kids offering at Contoso Park City.,48.18,90 min,1
+EXP-P-001-KID-007,P-001,Alpine Kids' Birthday Experience,Kids,Alpine Kids' Birthday Experience — a curated kids offering at Contoso Park City.,30.19,90 min,1
+EXP-P-001-KID-008,P-001,Alpine Family Scavenger Hunt,Kids,Alpine Family Scavenger Hunt — a curated kids offering at Contoso Park City.,46.57,90 min,1
+EXP-P-001-WEL-001,P-001,Alpine Sunrise Yoga Session,Wellness,Alpine Sunrise Yoga Session — a curated wellness offering at Contoso Park City.,64.01,60 min,1
+EXP-P-001-WEL-002,P-001,Alpine Meditation & Mindfulness,Wellness,Alpine Meditation & Mindfulness — a curated wellness offering at Contoso Park City.,37.59,60 min,1
+EXP-P-001-WEL-003,P-001,Alpine Pilates Studio Class,Wellness,Alpine Pilates Studio Class — a curated wellness offering at Contoso Park City.,128.66,45 min,1
+EXP-P-001-WEL-004,P-001,Alpine Sound Bath Experience,Wellness,Alpine Sound Bath Experience — a curated wellness offering at Contoso Park City.,130.97,60 min,1
+EXP-P-001-WEL-005,P-001,Alpine Guided Breathwork,Wellness,Alpine Guided Breathwork — a curated wellness offering at Contoso Park City.,100.09,60 min,1
+EXP-P-001-WEL-006,P-001,Alpine Nutrition Workshop,Wellness,Alpine Nutrition Workshop — a curated wellness offering at Contoso Park City.,116.39,75 min,1
+EXP-P-001-WEL-007,P-001,Alpine Forest Bathing Walk,Wellness,Alpine Forest Bathing Walk — a curated wellness offering at Contoso Park City.,140.47,60 min,1
+EXP-P-001-WEL-008,P-001,Alpine Recovery & Stretch Class,Wellness,Alpine Recovery & Stretch Class — a curated wellness offering at Contoso Park City.,105.38,75 min,1
+EXP-P-002-SPA-001,P-002,Oceanside Signature Massage,Spa,Oceanside Signature Massage — a curated spa offering at Contoso Myrtle Beach.,119.59,90 min,1
+EXP-P-002-SPA-002,P-002,Oceanside Deep Tissue Therapy,Spa,Oceanside Deep Tissue Therapy — a curated spa offering at Contoso Myrtle Beach.,200.98,90 min,1
+EXP-P-002-SPA-003,P-002,Oceanside Aromatherapy Facial,Spa,Oceanside Aromatherapy Facial — a curated spa offering at Contoso Myrtle Beach.,170.63,60 min,1
+EXP-P-002-SPA-004,P-002,Oceanside Couples Retreat Package,Spa,Oceanside Couples Retreat Package — a curated spa offering at Contoso Myrtle Beach.,243.68,60 min,1
+EXP-P-002-SPA-005,P-002,Oceanside Hot Stone Treatment,Spa,Oceanside Hot Stone Treatment — a curated spa offering at Contoso Myrtle Beach.,121.18,90 min,1
+EXP-P-002-SPA-006,P-002,Oceanside Hydrating Body Wrap,Spa,Oceanside Hydrating Body Wrap — a curated spa offering at Contoso Myrtle Beach.,149.25,120 min,1
+EXP-P-002-SPA-007,P-002,Oceanside Express 30-Min Facial,Spa,Oceanside Express 30-Min Facial — a curated spa offering at Contoso Myrtle Beach.,306.18,60 min,1
+EXP-P-002-SPA-008,P-002,Oceanside Full Wellness Journey,Spa,Oceanside Full Wellness Journey — a curated spa offering at Contoso Myrtle Beach.,293.15,90 min,1
+EXP-P-002-DIN-001,P-002,Oceanside Chef's Tasting Menu,Dining,Oceanside Chef's Tasting Menu — a curated dining offering at Contoso Myrtle Beach.,162.72,3 hours,1
+EXP-P-002-DIN-002,P-002,Oceanside Wine & Pairing Dinner,Dining,Oceanside Wine & Pairing Dinner — a curated dining offering at Contoso Myrtle Beach.,194.49,3 hours,1
+EXP-P-002-DIN-003,P-002,Oceanside Sunset Terrace Dining,Dining,Oceanside Sunset Terrace Dining — a curated dining offering at Contoso Myrtle Beach.,249.37,2 hours,1
+EXP-P-002-DIN-004,P-002,Oceanside Private Dining Experience,Dining,Oceanside Private Dining Experience — a curated dining offering at Contoso Myrtle Beach.,159.48,90 min,1
+EXP-P-002-DIN-005,P-002,Oceanside Sunday Brunch Buffet,Dining,Oceanside Sunday Brunch Buffet — a curated dining offering at Contoso Myrtle Beach.,435.31,3 hours,1
+EXP-P-002-DIN-006,P-002,Oceanside Cocktail & Tapas Hour,Dining,Oceanside Cocktail & Tapas Hour — a curated dining offering at Contoso Myrtle Beach.,355.08,3 hours,1
+EXP-P-002-DIN-007,P-002,Oceanside Seasonal Farm Dinner,Dining,Oceanside Seasonal Farm Dinner — a curated dining offering at Contoso Myrtle Beach.,366.57,2 hours,1
+EXP-P-002-DIN-008,P-002,Oceanside In-Room Romance Package,Dining,Oceanside In-Room Romance Package — a curated dining offering at Contoso Myrtle Beach.,129.19,2 hours,1
+EXP-P-002-ACT-001,P-002,Oceanside Adventure Package,Activity,Oceanside Adventure Package — a curated activity offering at Contoso Myrtle Beach.,285.77,3 hours,1
+EXP-P-002-ACT-002,P-002,Oceanside Nature Walk & Tour,Activity,Oceanside Nature Walk & Tour — a curated activity offering at Contoso Myrtle Beach.,177.35,2 hours,1
+EXP-P-002-ACT-003,P-002,Oceanside Photography Experience,Activity,Oceanside Photography Experience — a curated activity offering at Contoso Myrtle Beach.,126.0,Full day,1
+EXP-P-002-ACT-004,P-002,Oceanside Guided Excursion,Activity,Oceanside Guided Excursion — a curated activity offering at Contoso Myrtle Beach.,147.55,Half day,1
+EXP-P-002-ACT-005,P-002,Oceanside Outdoor Fitness Session,Activity,Oceanside Outdoor Fitness Session — a curated activity offering at Contoso Myrtle Beach.,287.66,Half day,1
+EXP-P-002-ACT-006,P-002,Oceanside Local Cultural Tour,Activity,Oceanside Local Cultural Tour — a curated activity offering at Contoso Myrtle Beach.,128.26,2 hours,1
+EXP-P-002-ACT-007,P-002,Oceanside Evening Stargazing,Activity,Oceanside Evening Stargazing — a curated activity offering at Contoso Myrtle Beach.,164.92,Full day,1
+EXP-P-002-ACT-008,P-002,Oceanside Half-Day Exploration,Activity,Oceanside Half-Day Exploration — a curated activity offering at Contoso Myrtle Beach.,182.66,Full day,1
+EXP-P-002-KID-001,P-002,Oceanside Kids Club Day Pass,Kids,Oceanside Kids Club Day Pass — a curated kids offering at Contoso Myrtle Beach.,79.44,60 min,1
+EXP-P-002-KID-002,P-002,Oceanside Junior Chef Workshop,Kids,Oceanside Junior Chef Workshop — a curated kids offering at Contoso Myrtle Beach.,92.87,60 min,1
+EXP-P-002-KID-003,P-002,Oceanside Kids Movie Night,Kids,Oceanside Kids Movie Night — a curated kids offering at Contoso Myrtle Beach.,47.87,90 min,1
+EXP-P-002-KID-004,P-002,Oceanside Treasure Hunt Adventure,Kids,Oceanside Treasure Hunt Adventure — a curated kids offering at Contoso Myrtle Beach.,41.88,90 min,1
+EXP-P-002-KID-005,P-002,Oceanside Arts & Crafts Studio,Kids,Oceanside Arts & Crafts Studio — a curated kids offering at Contoso Myrtle Beach.,113.77,All day,1
+EXP-P-002-KID-006,P-002,Oceanside Mini Spa for Kids,Kids,Oceanside Mini Spa for Kids — a curated kids offering at Contoso Myrtle Beach.,28.42,60 min,1
+EXP-P-002-KID-007,P-002,Oceanside Kids' Birthday Experience,Kids,Oceanside Kids' Birthday Experience — a curated kids offering at Contoso Myrtle Beach.,87.14,2 hours,1
+EXP-P-002-KID-008,P-002,Oceanside Family Scavenger Hunt,Kids,Oceanside Family Scavenger Hunt — a curated kids offering at Contoso Myrtle Beach.,81.02,All day,1
+EXP-P-002-WEL-001,P-002,Oceanside Sunrise Yoga Session,Wellness,Oceanside Sunrise Yoga Session — a curated wellness offering at Contoso Myrtle Beach.,141.09,75 min,1
+EXP-P-002-WEL-002,P-002,Oceanside Meditation & Mindfulness,Wellness,Oceanside Meditation & Mindfulness — a curated wellness offering at Contoso Myrtle Beach.,124.2,75 min,1
+EXP-P-002-WEL-003,P-002,Oceanside Pilates Studio Class,Wellness,Oceanside Pilates Studio Class — a curated wellness offering at Contoso Myrtle Beach.,50.15,60 min,1
+EXP-P-002-WEL-004,P-002,Oceanside Sound Bath Experience,Wellness,Oceanside Sound Bath Experience — a curated wellness offering at Contoso Myrtle Beach.,100.07,60 min,1
+EXP-P-002-WEL-005,P-002,Oceanside Guided Breathwork,Wellness,Oceanside Guided Breathwork — a curated wellness offering at Contoso Myrtle Beach.,53.34,75 min,1
+EXP-P-002-WEL-006,P-002,Oceanside Nutrition Workshop,Wellness,Oceanside Nutrition Workshop — a curated wellness offering at Contoso Myrtle Beach.,92.16,75 min,1
+EXP-P-002-WEL-007,P-002,Oceanside Forest Bathing Walk,Wellness,Oceanside Forest Bathing Walk — a curated wellness offering at Contoso Myrtle Beach.,43.77,45 min,1
+EXP-P-002-WEL-008,P-002,Oceanside Recovery & Stretch Class,Wellness,Oceanside Recovery & Stretch Class — a curated wellness offering at Contoso Myrtle Beach.,127.64,75 min,1
+EXP-P-003-SPA-001,P-003,Sunshine Signature Massage,Spa,Sunshine Signature Massage — a curated spa offering at Contoso Orlando.,181.01,90 min,1
+EXP-P-003-SPA-002,P-003,Sunshine Deep Tissue Therapy,Spa,Sunshine Deep Tissue Therapy — a curated spa offering at Contoso Orlando.,131.03,60 min,1
+EXP-P-003-SPA-003,P-003,Sunshine Aromatherapy Facial,Spa,Sunshine Aromatherapy Facial — a curated spa offering at Contoso Orlando.,210.58,120 min,1
+EXP-P-003-SPA-004,P-003,Sunshine Couples Retreat Package,Spa,Sunshine Couples Retreat Package — a curated spa offering at Contoso Orlando.,238.02,90 min,1
+EXP-P-003-SPA-005,P-003,Sunshine Hot Stone Treatment,Spa,Sunshine Hot Stone Treatment — a curated spa offering at Contoso Orlando.,164.61,90 min,1
+EXP-P-003-SPA-006,P-003,Sunshine Hydrating Body Wrap,Spa,Sunshine Hydrating Body Wrap — a curated spa offering at Contoso Orlando.,87.21,60 min,1
+EXP-P-003-SPA-007,P-003,Sunshine Express 30-Min Facial,Spa,Sunshine Express 30-Min Facial — a curated spa offering at Contoso Orlando.,286.46,120 min,1
+EXP-P-003-SPA-008,P-003,Sunshine Full Wellness Journey,Spa,Sunshine Full Wellness Journey — a curated spa offering at Contoso Orlando.,232.53,60 min,1
+EXP-P-003-DIN-001,P-003,Sunshine Chef's Tasting Menu,Dining,Sunshine Chef's Tasting Menu — a curated dining offering at Contoso Orlando.,246.34,90 min,1
+EXP-P-003-DIN-002,P-003,Sunshine Wine & Pairing Dinner,Dining,Sunshine Wine & Pairing Dinner — a curated dining offering at Contoso Orlando.,189.81,3 hours,1
+EXP-P-003-DIN-003,P-003,Sunshine Sunset Terrace Dining,Dining,Sunshine Sunset Terrace Dining — a curated dining offering at Contoso Orlando.,80.91,3 hours,1
+EXP-P-003-DIN-004,P-003,Sunshine Private Dining Experience,Dining,Sunshine Private Dining Experience — a curated dining offering at Contoso Orlando.,252.75,2 hours,1
+EXP-P-003-DIN-005,P-003,Sunshine Sunday Brunch Buffet,Dining,Sunshine Sunday Brunch Buffet — a curated dining offering at Contoso Orlando.,328.64,90 min,1
+EXP-P-003-DIN-006,P-003,Sunshine Cocktail & Tapas Hour,Dining,Sunshine Cocktail & Tapas Hour — a curated dining offering at Contoso Orlando.,426.51,90 min,1
+EXP-P-003-DIN-007,P-003,Sunshine Seasonal Farm Dinner,Dining,Sunshine Seasonal Farm Dinner — a curated dining offering at Contoso Orlando.,327.23,3 hours,1
+EXP-P-003-DIN-008,P-003,Sunshine In-Room Romance Package,Dining,Sunshine In-Room Romance Package — a curated dining offering at Contoso Orlando.,335.77,90 min,1
+EXP-P-003-ACT-001,P-003,Sunshine Adventure Package,Activity,Sunshine Adventure Package — a curated activity offering at Contoso Orlando.,65.57,Full day,1
+EXP-P-003-ACT-002,P-003,Sunshine Nature Walk & Tour,Activity,Sunshine Nature Walk & Tour — a curated activity offering at Contoso Orlando.,135.21,Half day,1
+EXP-P-003-ACT-003,P-003,Sunshine Photography Experience,Activity,Sunshine Photography Experience — a curated activity offering at Contoso Orlando.,281.78,2 hours,1
+EXP-P-003-ACT-004,P-003,Sunshine Guided Excursion,Activity,Sunshine Guided Excursion — a curated activity offering at Contoso Orlando.,144.59,Full day,1
+EXP-P-003-ACT-005,P-003,Sunshine Outdoor Fitness Session,Activity,Sunshine Outdoor Fitness Session — a curated activity offering at Contoso Orlando.,199.88,2 hours,1
+EXP-P-003-ACT-006,P-003,Sunshine Local Cultural Tour,Activity,Sunshine Local Cultural Tour — a curated activity offering at Contoso Orlando.,58.89,Half day,1
+EXP-P-003-ACT-007,P-003,Sunshine Evening Stargazing,Activity,Sunshine Evening Stargazing — a curated activity offering at Contoso Orlando.,146.45,3 hours,1
+EXP-P-003-ACT-008,P-003,Sunshine Half-Day Exploration,Activity,Sunshine Half-Day Exploration — a curated activity offering at Contoso Orlando.,263.61,Half day,1
+EXP-P-003-KID-001,P-003,Sunshine Kids Club Day Pass,Kids,Sunshine Kids Club Day Pass — a curated kids offering at Contoso Orlando.,90.02,60 min,1
+EXP-P-003-KID-002,P-003,Sunshine Junior Chef Workshop,Kids,Sunshine Junior Chef Workshop — a curated kids offering at Contoso Orlando.,102.99,2 hours,1
+EXP-P-003-KID-003,P-003,Sunshine Kids Movie Night,Kids,Sunshine Kids Movie Night — a curated kids offering at Contoso Orlando.,42.11,All day,1
+EXP-P-003-KID-004,P-003,Sunshine Treasure Hunt Adventure,Kids,Sunshine Treasure Hunt Adventure — a curated kids offering at Contoso Orlando.,50.29,90 min,1
+EXP-P-003-KID-005,P-003,Sunshine Arts & Crafts Studio,Kids,Sunshine Arts & Crafts Studio — a curated kids offering at Contoso Orlando.,107.52,90 min,1
+EXP-P-003-KID-006,P-003,Sunshine Mini Spa for Kids,Kids,Sunshine Mini Spa for Kids — a curated kids offering at Contoso Orlando.,111.77,All day,1
+EXP-P003-KID-007,P-003,Sunshine Kids' Birthday Experience,Kids,Sunshine Kids' Birthday Experience — a curated kids offering at Contoso Orlando.,30.54,2 hours,1
+EXP-P-003-KID-008,P-003,Sunshine Family Scavenger Hunt,Kids,Sunshine Family Scavenger Hunt — a curated kids offering at Contoso Orlando.,54.24,90 min,1
+EXP-P-003-WEL-001,P-003,Sunshine Sunrise Yoga Session,Wellness,Sunshine Sunrise Yoga Session — a curated wellness offering at Contoso Orlando.,58.19,75 min,1
+EXP-P-003-WEL-002,P-003,Sunshine Meditation & Mindfulness,Wellness,Sunshine Meditation & Mindfulness — a curated wellness offering at Contoso Orlando.,146.27,75 min,1
+EXP-P-003-WEL-003,P-003,Sunshine Pilates Studio Class,Wellness,Sunshine Pilates Studio Class — a curated wellness offering at Contoso Orlando.,144.52,45 min,1
+EXP-P-003-WEL-004,P-003,Sunshine Sound Bath Experience,Wellness,Sunshine Sound Bath Experience — a curated wellness offering at Contoso Orlando.,138.74,75 min,1
+EXP-P-003-WEL-005,P-003,Sunshine Guided Breathwork,Wellness,Sunshine Guided Breathwork — a curated wellness offering at Contoso Orlando.,98.87,60 min,1
+EXP-P-003-WEL-006,P-003,Sunshine Nutrition Workshop,Wellness,Sunshine Nutrition Workshop — a curated wellness offering at Contoso Orlando.,96.51,75 min,1
+EXP-P-003-WEL-007,P-003,Sunshine Forest Bathing Walk,Wellness,Sunshine Forest Bathing Walk — a curated wellness offering at Contoso Orlando.,36.2,45 min,1
+EXP-P-003-WEL-008,P-003,Sunshine Recovery & Stretch Class,Wellness,Sunshine Recovery & Stretch Class — a curated wellness offering at Contoso Orlando.,126.5,60 min,1
+EXP-P-004-SPA-001,P-004,Midtown Signature Massage,Spa,Midtown Signature Massage — a curated spa offering at Contoso New York.,173.93,120 min,1
+EXP-P-004-SPA-002,P-004,Midtown Deep Tissue Therapy,Spa,Midtown Deep Tissue Therapy — a curated spa offering at Contoso New York.,125.69,60 min,1
+EXP-P-004-SPA-003,P-004,Midtown Aromatherapy Facial,Spa,Midtown Aromatherapy Facial — a curated spa offering at Contoso New York.,191.35,60 min,1
+EXP-P-004-SPA-004,P-004,Midtown Couples Retreat Package,Spa,Midtown Couples Retreat Package — a curated spa offering at Contoso New York.,155.99,120 min,1
+EXP-P-004-SPA-005,P-004,Midtown Hot Stone Treatment,Spa,Midtown Hot Stone Treatment — a curated spa offering at Contoso New York.,225.85,120 min,1
+EXP-P-004-SPA-006,P-004,Midtown Hydrating Body Wrap,Spa,Midtown Hydrating Body Wrap — a curated spa offering at Contoso New York.,271.48,120 min,1
+EXP-P-004-SPA-007,P-004,Midtown Express 30-Min Facial,Spa,Midtown Express 30-Min Facial — a curated spa offering at Contoso New York.,253.08,60 min,1
+EXP-P-004-SPA-008,P-004,Midtown Full Wellness Journey,Spa,Midtown Full Wellness Journey — a curated spa offering at Contoso New York.,110.35,60 min,1
+EXP-P-004-DIN-001,P-004,Midtown Chef's Tasting Menu,Dining,Midtown Chef's Tasting Menu — a curated dining offering at Contoso New York.,343.11,3 hours,1
+EXP-P-004-DIN-002,P-004,Midtown Wine & Pairing Dinner,Dining,Midtown Wine & Pairing Dinner — a curated dining offering at Contoso New York.,231.43,3 hours,1
+EXP-P-004-DIN-003,P-004,Midtown Sunset Terrace Dining,Dining,Midtown Sunset Terrace Dining — a curated dining offering at Contoso New York.,442.77,2 hours,1
+EXP-P-004-DIN-004,P-004,Midtown Private Dining Experience,Dining,Midtown Private Dining Experience — a curated dining offering at Contoso New York.,322.68,90 min,1
+EXP-P-004-DIN-005,P-004,Midtown Sunday Brunch Buffet,Dining,Midtown Sunday Brunch Buffet — a curated dining offering at Contoso New York.,302.71,2 hours,1
+EXP-P-004-DIN-006,P-004,Midtown Cocktail & Tapas Hour,Dining,Midtown Cocktail & Tapas Hour — a curated dining offering at Contoso New York.,93.34,90 min,1
+EXP-P-004-DIN-007,P-004,Midtown Seasonal Farm Dinner,Dining,Midtown Seasonal Farm Dinner — a curated dining offering at Contoso New York.,82.79,3 hours,1
+EXP-P-004-DIN-008,P-004,Midtown In-Room Romance Package,Dining,Midtown In-Room Romance Package — a curated dining offering at Contoso New York.,124.57,3 hours,1
+EXP-P-004-ACT-001,P-004,Midtown Adventure Package,Activity,Midtown Adventure Package — a curated activity offering at Contoso New York.,225.22,3 hours,1
+EXP-P-004-ACT-002,P-004,Midtown Nature Walk & Tour,Activity,Midtown Nature Walk & Tour — a curated activity offering at Contoso New York.,104.57,3 hours,1
+EXP-P-004-ACT-003,P-004,Midtown Photography Experience,Activity,Midtown Photography Experience — a curated activity offering at Contoso New York.,287.38,Full day,1
+EXP-P-004-ACT-004,P-004,Midtown Guided Excursion,Activity,Midtown Guided Excursion — a curated activity offering at Contoso New York.,255.44,Half day,1
+EXP-P-004-ACT-005,P-004,Midtown Outdoor Fitness Session,Activity,Midtown Outdoor Fitness Session — a curated activity offering at Contoso New York.,188.84,3 hours,1
+EXP-P-004-ACT-006,P-004,Midtown Local Cultural Tour,Activity,Midtown Local Cultural Tour — a curated activity offering at Contoso New York.,233.49,Half day,1
+EXP-P-004-ACT-007,P-004,Midtown Evening Stargazing,Activity,Midtown Evening Stargazing — a curated activity offering at Contoso New York.,171.38,2 hours,1
+EXP-P-004-ACT-008,P-004,Midtown Half-Day Exploration,Activity,Midtown Half-Day Exploration — a curated activity offering at Contoso New York.,130.92,Half day,1
+EXP-P-004-KID-001,P-004,Midtown Kids Club Day Pass,Kids,Midtown Kids Club Day Pass — a curated kids offering at Contoso New York.,116.45,60 min,1
+EXP-P-004-KID-002,P-004,Midtown Junior Chef Workshop,Kids,Midtown Junior Chef Workshop — a curated kids offering at Contoso New York.,32.73,90 min,1
+EXP-P-004-KID-003,P-004,Midtown Kids Movie Night,Kids,Midtown Kids Movie Night — a curated kids offering at Contoso New York.,105.21,All day,1
+EXP-P-004-KID-004,P-004,Midtown Treasure Hunt Adventure,Kids,Midtown Treasure Hunt Adventure — a curated kids offering at Contoso New York.,33.33,90 min,1
+EXP-P-004-KID-005,P-004,Midtown Arts & Crafts Studio,Kids,Midtown Arts & Crafts Studio — a curated kids offering at Contoso New York.,122.36,All day,1
+EXP-P-004-KID-006,P-004,Midtown Mini Spa for Kids,Kids,Midtown Mini Spa for Kids — a curated kids offering at Contoso New York.,58.42,All day,1
+EXP-P-004-KID-007,P-004,Midtown Kids' Birthday Experience,Kids,Midtown Kids' Birthday Experience — a curated kids offering at Contoso New York.,55.27,60 min,1
+EXP-P-004-KID-008,P-004,Midtown Family Scavenger Hunt,Kids,Midtown Family Scavenger Hunt — a curated kids offering at Contoso New York.,124.49,2 hours,1
+EXP-P-004-WEL-001,P-004,Midtown Sunrise Yoga Session,Wellness,Midtown Sunrise Yoga Session — a curated wellness offering at Contoso New York.,140.2,60 min,1
+EXP-P-004-WEL-002,P-004,Midtown Meditation & Mindfulness,Wellness,Midtown Meditation & Mindfulness — a curated wellness offering at Contoso New York.,99.55,60 min,1
+EXP-P-004-WEL-003,P-004,Midtown Pilates Studio Class,Wellness,Midtown Pilates Studio Class — a curated wellness offering at Contoso New York.,130.07,75 min,1
+EXP-P-004-WEL-004,P-004,Midtown Sound Bath Experience,Wellness,Midtown Sound Bath Experience — a curated wellness offering at Contoso New York.,82.39,60 min,1
+EXP-P-004-WEL-005,P-004,Midtown Guided Breathwork,Wellness,Midtown Guided Breathwork — a curated wellness offering at Contoso New York.,49.98,75 min,1
+EXP-P-004-WEL-006,P-004,Midtown Nutrition Workshop,Wellness,Midtown Nutrition Workshop — a curated wellness offering at Contoso New York.,44.17,75 min,1
+EXP-P-004-WEL-007,P-004,Midtown Forest Bathing Walk,Wellness,Midtown Forest Bathing Walk — a curated wellness offering at Contoso New York.,62.34,45 min,1
+EXP-P-004-WEL-008,P-004,Midtown Recovery & Stretch Class,Wellness,Midtown Recovery & Stretch Class — a curated wellness offering at Contoso New York.,55.45,75 min,1
+EXP-P-005-SPA-001,P-005,Smoky Signature Massage,Spa,Smoky Signature Massage — a curated spa offering at Contoso Gatlinburg.,237.4,90 min,1
+EXP-P-005-SPA-002,P-005,Smoky Deep Tissue Therapy,Spa,Smoky Deep Tissue Therapy — a curated spa offering at Contoso Gatlinburg.,277.82,60 min,1
+EXP-P-005-SPA-003,P-005,Smoky Aromatherapy Facial,Spa,Smoky Aromatherapy Facial — a curated spa offering at Contoso Gatlinburg.,286.33,120 min,1
+EXP-P-005-SPA-004,P-005,Smoky Couples Retreat Package,Spa,Smoky Couples Retreat Package — a curated spa offering at Contoso Gatlinburg.,200.07,90 min,1
+EXP-P-005-SPA-005,P-005,Smoky Hot Stone Treatment,Spa,Smoky Hot Stone Treatment — a curated spa offering at Contoso Gatlinburg.,212.2,90 min,1
+EXP-P-005-SPA-006,P-005,Smoky Hydrating Body Wrap,Spa,Smoky Hydrating Body Wrap — a curated spa offering at Contoso Gatlinburg.,163.72,120 min,1
+EXP-P-005-SPA-007,P-005,Smoky Express 30-Min Facial,Spa,Smoky Express 30-Min Facial — a curated spa offering at Contoso Gatlinburg.,166.01,120 min,1
+EXP-P-005-SPA-008,P-005,Smoky Full Wellness Journey,Spa,Smoky Full Wellness Journey — a curated spa offering at Contoso Gatlinburg.,319.09,90 min,1
+EXP-P-005-DIN-001,P-005,Smoky Chef's Tasting Menu,Dining,Smoky Chef's Tasting Menu — a curated dining offering at Contoso Gatlinburg.,304.71,2 hours,1
+EXP-P-005-DIN-002,P-005,Smoky Wine & Pairing Dinner,Dining,Smoky Wine & Pairing Dinner — a curated dining offering at Contoso Gatlinburg.,264.77,90 min,1
+EXP-P-005-DIN-003,P-005,Smoky Sunset Terrace Dining,Dining,Smoky Sunset Terrace Dining — a curated dining offering at Contoso Gatlinburg.,297.39,2 hours,1
+EXP-P-005-DIN-004,P-005,Smoky Private Dining Experience,Dining,Smoky Private Dining Experience — a curated dining offering at Contoso Gatlinburg.,204.33,90 min,1
+EXP-P-005-DIN-005,P-005,Smoky Sunday Brunch Buffet,Dining,Smoky Sunday Brunch Buffet — a curated dining offering at Contoso Gatlinburg.,194.96,2 hours,1
+EXP-P-005-DIN-006,P-005,Smoky Cocktail & Tapas Hour,Dining,Smoky Cocktail & Tapas Hour — a curated dining offering at Contoso Gatlinburg.,354.78,2 hours,1
+EXP-P-005-DIN-007,P-005,Smoky Seasonal Farm Dinner,Dining,Smoky Seasonal Farm Dinner — a curated dining offering at Contoso Gatlinburg.,150.78,3 hours,1
+EXP-P-005-DIN-008,P-005,Smoky In-Room Romance Package,Dining,Smoky In-Room Romance Package — a curated dining offering at Contoso Gatlinburg.,398.62,3 hours,1
+EXP-P-005-ACT-001,P-005,Smoky Adventure Package,Activity,Smoky Adventure Package — a curated activity offering at Contoso Gatlinburg.,55.75,3 hours,1
+EXP-P-005-ACT-002,P-005,Smoky Nature Walk & Tour,Activity,Smoky Nature Walk & Tour — a curated activity offering at Contoso Gatlinburg.,198.35,2 hours,1
+EXP-P-005-ACT-003,P-005,Smoky Photography Experience,Activity,Smoky Photography Experience — a curated activity offering at Contoso Gatlinburg.,235.72,3 hours,1
+EXP-P-005-ACT-004,P-005,Smoky Guided Excursion,Activity,Smoky Guided Excursion — a curated activity offering at Contoso Gatlinburg.,112.55,2 hours,1
+EXP-P-005-ACT-005,P-005,Smoky Outdoor Fitness Session,Activity,Smoky Outdoor Fitness Session — a curated activity offering at Contoso Gatlinburg.,205.18,3 hours,1
+EXP-P-005-ACT-006,P-005,Smoky Local Cultural Tour,Activity,Smoky Local Cultural Tour — a curated activity offering at Contoso Gatlinburg.,118.25,Full day,1
+EXP-P-005-ACT-007,P-005,Smoky Evening Stargazing,Activity,Smoky Evening Stargazing — a curated activity offering at Contoso Gatlinburg.,285.25,2 hours,1
+EXP-P-005-ACT-008,P-005,Smoky Half-Day Exploration,Activity,Smoky Half-Day Exploration — a curated activity offering at Contoso Gatlinburg.,225.25,Half day,1
+EXP-P-005-KID-001,P-005,Smoky Kids Club Day Pass,Kids,Smoky Kids Club Day Pass — a curated kids offering at Contoso Gatlinburg.,25.95,60 min,1
+EXP-P-005-KID-002,P-005,Smoky Junior Chef Workshop,Kids,Smoky Junior Chef Workshop — a curated kids offering at Contoso Gatlinburg.,66.9,2 hours,1
+EXP-P-005-KID-003,P-005,Smoky Kids Movie Night,Kids,Smoky Kids Movie Night — a curated kids offering at Contoso Gatlinburg.,73.29,All day,1
+EXP-P-005-KID-004,P-005,Smoky Treasure Hunt Adventure,Kids,Smoky Treasure Hunt Adventure — a curated kids offering at Contoso Gatlinburg.,66.52,2 hours,1
+EXP-P-005-KID-005,P-005,Smoky Arts & Crafts Studio,Kids,Smoky Arts & Crafts Studio — a curated kids offering at Contoso Gatlinburg.,112.9,All day,1
+EXP-P-005-KID-006,P-005,Smoky Mini Spa for Kids,Kids,Smoky Mini Spa for Kids — a curated kids offering at Contoso Gatlinburg.,63.19,90 min,1
+EXP-P-005-KID-007,P-005,Smoky Kids' Birthday Experience,Kids,Smoky Kids' Birthday Experience — a curated kids offering at Contoso Gatlinburg.,37.59,2 hours,1
+EXP-P-005-KID-008,P-005,Smoky Family Scavenger Hunt,Kids,Smoky Family Scavenger Hunt — a curated kids offering at Contoso Gatlinburg.,84.39,60 min,1
+EXP-P-005-WEL-001,P-005,Smoky Sunrise Yoga Session,Wellness,Smoky Sunrise Yoga Session — a curated wellness offering at Contoso Gatlinburg.,60.39,75 min,1
+EXP-P-005-WEL-002,P-005,Smoky Meditation & Mindfulness,Wellness,Smoky Meditation & Mindfulness — a curated wellness offering at Contoso Gatlinburg.,61.56,75 min,1
+EXP-P-005-WEL-003,P-005,Smoky Pilates Studio Class,Wellness,Smoky Pilates Studio Class — a curated wellness offering at Contoso Gatlinburg.,122.45,75 min,1
+EXP-P-005-WEL-004,P-005,Smoky Sound Bath Experience,Wellness,Smoky Sound Bath Experience — a curated wellness offering at Contoso Gatlinburg.,145.11,75 min,1
+EXP-P-005-WEL-005,P-005,Smoky Guided Breathwork,Wellness,Smoky Guided Breathwork — a curated wellness offering at Contoso Gatlinburg.,147.07,45 min,1
+EXP-P-005-WEL-006,P-005,Smoky Nutrition Workshop,Wellness,Smoky Nutrition Workshop — a curated wellness offering at Contoso Gatlinburg.,113.06,45 min,1
+EXP-P-005-WEL-007,P-005,Smoky Forest Bathing Walk,Wellness,Smoky Forest Bathing Walk — a curated wellness offering at Contoso Gatlinburg.,88.68,45 min,1
+EXP-P-005-WEL-008,P-005,Smoky Recovery & Stretch Class,Wellness,Smoky Recovery & Stretch Class — a curated wellness offering at Contoso Gatlinburg.,143.59,45 min,1
