@@ -22,9 +22,9 @@
 
 ### Step 1 — Launch the demo
 - Click **Dana Lakehouse** on the launcher screen
-- The PMS loads instantly with Dana's profile
+- Seach for "Lakehouse" and select the guest record in the results
 
-**Say:** *"As soon as the call is answered, the system pulls Dana's profile from Azure SQL — 12 stays, Platinum status, $47K lifetime spend. No form-filling."*
+**Say:** *"As soon as the guest record loads, the system pulls Dana's profile from Azure SQL — 12 stays, Platinum status, $47K lifetime spend. No form-filling."*
 
 ### Step 2 — Watch the Guest Intelligence panel auto-run
 - Pipeline steps light up: **Retrieval → Sentiment → Intelligence → Validation**
@@ -56,7 +56,7 @@
 
 ### Step 1 — Launch Anne's profile
 - Click **Anne Thropic** on the launcher or reload and select persona
-- Watch auto-trigger on profile load
+- Seach for "Thropic" and select the guest record in the results
 
 ### Step 2 — Scroll to Sentiment Summary (expand it)
 - Point to the per-category breakdown: Service / Cleanliness / Food & Bev / Spa / Activities
