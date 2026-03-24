@@ -83,7 +83,7 @@ If the page loads but **Analyze Guest** fails, the most common cause is Fabric c
 |---------|---------|-----------|
 | Dana Lakehouse | Platinum | "I want to book a trip this weekend" |
 | Anne Thropic | Gold | Show her daughter Emma's upcoming birthday, ask AI what to do |
-| Victor Storr | Silver | "I need to change my booking" — the AI finds him an alternative when first choice is full |
+| Victor Storr | Silver | "I need to change my booking" — the AI recommends experiences when guest has to travel to a location they do not like |
 
 Full walk-through: [demo-script.md](demo-script.md)
 
