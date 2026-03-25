@@ -113,6 +113,20 @@ def create_workspace(name: str, capacity_id: str) -> dict[str, Any]:
     return resp.json()
 
 
+def assign_workspace_to_capacity(workspace_id: str, capacity_id: str) -> None:
+    """Assign (or reassign) a Fabric workspace to a capacity."""
+    log.info("Assigning workspace %s to capacity %s", workspace_id, capacity_id)
+    resp = requests.post(
+        f"{FABRIC_API}/workspaces/{workspace_id}/assignToCapacity",
+        headers=_headers(),
+        json={"capacityId": capacity_id},
+    )
+    # 200 = immediate success, 202 = async (accepted), both are fine
+    if resp.status_code not in (200, 202):
+        resp.raise_for_status()
+    log.info("Workspace assigned to capacity (HTTP %s)", resp.status_code)
+
+
 def list_items(workspace_id: str, item_type: str = "SQLDatabase") -> list[dict[str, Any]]:
     """List items of a given type in a workspace."""
     resp = requests.get(
@@ -176,6 +190,9 @@ def get_sql_connection_string(workspace_id: str, database_name: str) -> tuple[st
     Returns (sql_server, sql_database) tuple.
     Fabric SQL Database has its own unique server FQDN and database name
     (different from the workspace-based datawarehouse endpoint).
+
+    Retries on 404 because a newly created database may take time for its
+    SQL endpoint details to become available.
     """
     # Find the SQL Database item by name
     items = list_items(workspace_id, "SQLDatabase")
@@ -188,13 +205,24 @@ def get_sql_connection_string(workspace_id: str, database_name: str) -> tuple[st
     if not db_item:
         raise RuntimeError(f"SQL Database '{database_name}' not found in workspace {workspace_id}")
 
-    # Get detailed properties including connection info
+    # Get detailed properties including connection info (retry on 404)
     item_id = db_item["id"]
-    resp = requests.get(
-        f"{FABRIC_API}/workspaces/{workspace_id}/sqlDatabases/{item_id}",
-        headers=_headers(),
-    )
-    resp.raise_for_status()
+    url = f"{FABRIC_API}/workspaces/{workspace_id}/sqlDatabases/{item_id}"
+    max_retries = 12
+    for attempt in range(1, max_retries + 1):
+        resp = requests.get(url, headers=_headers())
+        if resp.status_code == 200:
+            break
+        if resp.status_code == 404 and attempt < max_retries:
+            wait = 15 * attempt
+            log.warning(
+                "SQL Database details not ready (404), retry %d/%d in %ds...",
+                attempt, max_retries, wait,
+            )
+            time.sleep(wait)
+            continue
+        resp.raise_for_status()
+
     props = resp.json().get("properties", {})
 
     sql_server = props.get("serverFqdn", "")
@@ -225,10 +253,11 @@ def main() -> None:
     capacity_id = _get_capacity_id(args.capacity_name)
     log.info("Capacity ID: %s", capacity_id)
 
-    # 2. Create or find workspace
+    # 2. Create or find workspace, always pinned to the current capacity
     ws = find_workspace(args.workspace_name)
     if ws:
         log.info("Workspace '%s' already exists (id=%s)", args.workspace_name, ws["id"])
+        assign_workspace_to_capacity(ws["id"], capacity_id)
     else:
         ws = create_workspace(args.workspace_name, capacity_id)
     workspace_id = ws["id"]

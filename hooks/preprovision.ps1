@@ -8,7 +8,11 @@ Write-Host "=== Contoso Resorts AI — Pre-provision ===" -ForegroundColor Cyan
 # ---------------------------------------------------------------------------
 # 1. Capture admin UPN (required for Fabric capacity admin)
 # ---------------------------------------------------------------------------
-$upn = azd env get-value AZURE_ADMIN_UPN 2>$null
+$upn = $null
+$rawUpn = azd env get-value AZURE_ADMIN_UPN 2>$null
+if ($LASTEXITCODE -eq 0 -and $rawUpn -and $rawUpn -notmatch "^ERROR:") {
+    $upn = $rawUpn
+}
 if (-not $upn) {
     # Try to get the UPN from the current Azure CLI login
     $account = az account show --query "user.name" -o tsv 2>$null
@@ -45,7 +49,11 @@ if (-not $location) {
 # 4. Auto-disable Fabric re-deployment if capacity already exists
 #    Suspended Fabric capacities reject ARM PUT updates — skip re-deploy
 # ---------------------------------------------------------------------------
-$fabricId = azd env get-value FABRIC_CAPACITY_ID 2>$null
+$fabricId = $null
+$rawFabricId = azd env get-value FABRIC_CAPACITY_ID 2>$null
+if ($LASTEXITCODE -eq 0 -and $rawFabricId -and $rawFabricId -notmatch "^ERROR:") {
+    $fabricId = $rawFabricId
+}
 if ($fabricId) {
     azd env set DEPLOY_FABRIC "false"
     Write-Host "Fabric capacity already provisioned — skipping re-deploy (DEPLOY_FABRIC=false)" -ForegroundColor Yellow

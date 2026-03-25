@@ -18,6 +18,7 @@ import os
 import struct
 import subprocess
 import sys
+import time
 
 import pyodbc
 import requests
@@ -72,24 +73,40 @@ def _get_connection_params() -> tuple[str, str]:
 
 
 def _connect(sql_server: str, sql_database: str) -> pyodbc.Connection:
-    """Open a pyodbc connection using Azure AD token auth."""
-    log.info("Connecting to %s/%s", sql_server, sql_database)
-    cred = DefaultAzureCredential()
-    token = cred.get_token("https://database.windows.net/.default")
-    token_bytes = token.token.encode("utf-16-le")
-    token_struct = struct.pack(f"<I{len(token_bytes)}s", len(token_bytes), token_bytes)
+    """Open a pyodbc connection using Azure AD token auth.
 
-    conn = pyodbc.connect(
-        f"Driver={{{DRIVER}}};"
-        f"Server={sql_server};"
-        f"Database={sql_database};"
-        "Encrypt=yes;"
-        "TrustServerCertificate=no;"
-        "Connection Timeout=60;",
-        attrs_before={1256: token_struct},
-    )
-    conn.autocommit = True
-    return conn
+    Retries on 'database has been disabled' errors — newly created Fabric
+    SQL Databases may take a few minutes to become available after the
+    capacity is activated.
+    """
+    max_retries = 6
+    for attempt in range(1, max_retries + 1):
+        log.info("Connecting to %s/%s (attempt %d/%d)", sql_server, sql_database, attempt, max_retries)
+        cred = DefaultAzureCredential()
+        token = cred.get_token("https://database.windows.net/.default")
+        token_bytes = token.token.encode("utf-16-le")
+        token_struct = struct.pack(f"<I{len(token_bytes)}s", len(token_bytes), token_bytes)
+
+        try:
+            conn = pyodbc.connect(
+                f"Driver={{{DRIVER}}};"
+                f"Server={sql_server};"
+                f"Database={sql_database};"
+                "Encrypt=yes;"
+                "TrustServerCertificate=no;"
+                "Connection Timeout=60;",
+                attrs_before={1256: token_struct},
+            )
+            conn.autocommit = True
+            return conn
+        except pyodbc.Error as exc:
+            msg = str(exc)
+            if "has been disabled" in msg and attempt < max_retries:
+                wait = 30 * attempt
+                log.warning("SQL Database not ready yet (disabled). Retrying in %ds...", wait)
+                time.sleep(wait)
+            else:
+                raise
 
 
 # ---------------------------------------------------------------------------

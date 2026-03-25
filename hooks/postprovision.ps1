@@ -31,19 +31,44 @@ if ($capacityName -and $subId) {
     $resumeUri = "https://management.azure.com/subscriptions/$subId/resourceGroups/$rgName" +
                  "/providers/Microsoft.Fabric/capacities/$capacityName/resume?api-version=2023-11-01"
 
-    Write-Host "Resuming Fabric capacity '$capacityName'..."
-    $resumeResult = az rest --method POST --url $resumeUri 2>&1
-    if ($LASTEXITCODE -ne 0 -and $resumeResult -notmatch "already") {
-        # A 409 means it's already Active — that's fine
-        if ($resumeResult -match "409" -or $resumeResult -match "already") {
+    # Newly created capacities may not be ready immediately — retry a few times
+    $maxRetries = 3
+    $resumed = $false
+    for ($i = 1; $i -le $maxRetries; $i++) {
+        Write-Host "Resuming Fabric capacity '$capacityName' (attempt $i/$maxRetries)..."
+        $resumeResult = az rest --method POST --url $resumeUri 2>&1
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "Resume request sent. Waiting 60s for capacity to become Active..." -ForegroundColor Green
+            Start-Sleep -Seconds 60
+            $resumed = $true
+            break
+        } elseif ($resumeResult -match "409" -or $resumeResult -match "already") {
             Write-Host "Fabric capacity is already Active — no action needed." -ForegroundColor DarkYellow
+            $resumed = $true
+            break
+        } elseif ($resumeResult -match "not ready to be updated") {
+            # Newly created capacity still initializing — it will be Active soon
+            Write-Host "Capacity is initializing. Waiting 30s..." -ForegroundColor Yellow
+            if ($i -lt $maxRetries) {
+                Start-Sleep -Seconds 30
+            }
         } else {
-            Write-Host "WARNING: Could not resume Fabric capacity. Continuing — capacity may already be Active." -ForegroundColor Yellow
-            Write-Host $resumeResult
+            Write-Host "Attempt $i failed: $resumeResult" -ForegroundColor Yellow
+            if ($i -lt $maxRetries) {
+                Write-Host "Waiting 30s before retry..." -ForegroundColor Yellow
+                Start-Sleep -Seconds 30
+            }
         }
-    } else {
-        Write-Host "Resume request sent. Waiting 60s for capacity to become Active..." -ForegroundColor Green
-        Start-Sleep -Seconds 60
+    }
+    if (-not $resumed) {
+        # Check if capacity is already Active via ARM — if so, proceed
+        $stateCheck = az rest --method GET --url ("https://management.azure.com/subscriptions/$subId/resourceGroups/$rgName" +
+            "/providers/Microsoft.Fabric/capacities/$capacityName" + "?api-version=2023-11-01") --query "properties.state" -o tsv 2>$null
+        if ($stateCheck -eq "Active") {
+            Write-Host "Fabric capacity is Active (confirmed via ARM). Proceeding." -ForegroundColor Green
+        } else {
+            Write-Host "WARNING: Capacity state is '$stateCheck'. Continuing but Fabric steps may fail." -ForegroundColor Yellow
+        }
     }
 } else {
     Write-Host "SKIP: FABRIC_CAPACITY_NAME or AZURE_SUBSCRIPTION_ID not set" -ForegroundColor DarkYellow
@@ -57,7 +82,11 @@ if ($capacityName -and $subId) {
 # ---------------------------------------------------------------------------
 Write-Host "`n--- Step 1: Fabric workspace + SQL Database ---" -ForegroundColor Yellow
 
-$existingWorkspaceId = azd env get-value FABRIC_WORKSPACE_ID 2>$null
+$existingWorkspaceId = $null
+$rawWsId = azd env get-value FABRIC_WORKSPACE_ID 2>$null
+if ($LASTEXITCODE -eq 0 -and $rawWsId -and $rawWsId -notmatch "^ERROR:") {
+    $existingWorkspaceId = $rawWsId
+}
 if ($existingWorkspaceId) {
     Write-Host "SKIP: Fabric workspace already provisioned (ID: $existingWorkspaceId)" -ForegroundColor DarkYellow
     Write-Host "      Delete FABRIC_WORKSPACE_ID from azd env to force re-creation."
