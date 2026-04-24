@@ -167,8 +167,46 @@ azd up
 The Fabric SQL Database is unreachable. Most likely cause: Fabric capacity is suspended.
 
 1. Resume Fabric capacity (see [Cost Management](#cost-management) above)
-2. Wait 1-2 minutes for it to become Active
+2. Wait **5-10 minutes** for the SQL Database to fully wake up (the capacity ARM state shows `Active` before the database is actually ready — this is expected)
 3. Try again
+
+### App connects but returns no results (empty tables)
+
+If the app connects successfully but queries return no data, the SQL Database item was likely deleted by Fabric due to an extended suspension period. Fabric may garbage-collect workspace items when a capacity remains suspended for multiple days.
+
+**Diagnose:**
+```powershell
+# Check row counts in all tables
+python -c "
+import sys; sys.path.insert(0, 'database')
+from postprovision import _get_connection_params, _connect
+conn = _connect(*_get_connection_params())
+cur = conn.cursor()
+for t in ['Guests','Bookings','Properties','Experiences','Inventory','Surveys']:
+    cur.execute(f'SELECT COUNT(*) FROM dbo.[{t}]')
+    print(f'{t}: {cur.fetchone()[0]} rows')
+"
+```
+
+**Fix — if the database item was deleted (workspace is empty):**
+```powershell
+# Step 1: Recreate the SQL Database item in the Fabric workspace
+python database/fabric_setup.py --capacity-name $(azd env get-value FABRIC_CAPACITY_NAME) --location eastus2
+
+# Step 2: Re-run schema DDL + grant App Service access
+python database/postprovision.py --schema-only
+
+# Step 3: Re-load all seed data
+python database/postprovision.py --seed-only
+```
+
+**Fix — if the database item exists but tables are empty:**
+```powershell
+# Re-load seed data only (skips schema DDL)
+python database/postprovision.py --seed-only
+```
+
+> **Note:** Data loss only occurs if the capacity was suspended for an extended period (typically multiple days). Normal nightly suspend/resume cycles do not delete data.
 
 ### `azd up` fails during Fabric setup
 
